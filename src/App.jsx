@@ -6,7 +6,7 @@ import GlassModal from './components/GlassModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selected, setSelected] = useState({ item: null, index: 0 });
 
   return (
     <GalleryProvider>
@@ -23,11 +23,15 @@ function App() {
             <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', marginBottom: 'var(--space-4)', fontFamily: 'var(--font-sans)' }}>
               مجموعه
             </h2>
-            <GalleryGrid onSelect={setSelectedItem} />
+            <GalleryGrid onSelect={(item, index = 0) => setSelected({ item, index })} />
           </motion.div>
         </div>
 
-        <GlassModal item={selectedItem} onClose={() => setSelectedItem(null)} />
+        <GlassModal 
+          item={selected.item} 
+          initialIndex={selected.index} 
+          onClose={() => setSelected({ item: null, index: 0 })} 
+        />
       </div>
     </GalleryProvider>
   );
