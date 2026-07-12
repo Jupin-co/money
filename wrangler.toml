@@ -1,6 +1,6 @@
 name = "money"
 compatibility_date = "2026-07-12"
-pages_build_output_dir = "./dist"
+main = "./worker.js"
 
 [assets]
 directory = "./dist"
