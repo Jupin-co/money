@@ -1,0 +1,41 @@
+{
+  "items": [
+    {
+      "id": "ir_1350_50_bu_1",
+      "type": "paper_money",
+      "country": "Iran",
+      "value": "50",
+      "year": "1350",
+      "quality": "BU",
+      "serialNumber": "123456",
+      "title": "50 Rials - Mohammad Reza Shah Pahlavi",
+      "description": "A pristine uncirculated 50 Rials banknote from Iran.",
+      "thumbnailUrl": "/sample-images/ir_1350_50_bu_thumb.jpg",
+      "imageUrl": "/sample-images/ir_1350_50_bu.jpg"
+    },
+    {
+      "id": "us_1921_1_ms63_2",
+      "type": "coin",
+      "country": "USA",
+      "value": "1",
+      "year": "1921",
+      "quality": "MS63",
+      "title": "1921 Morgan Silver Dollar",
+      "description": "Mint State 63 Morgan Dollar, a classic American coin.",
+      "thumbnailUrl": "/sample-images/us_1921_1_ms63_thumb.jpg",
+      "imageUrl": "/sample-images/us_1921_1_ms63.jpg"
+    },
+    {
+      "id": "uk_1840_1d_vf_3",
+      "type": "stamp",
+      "country": "UK",
+      "value": "1d",
+      "year": "1840",
+      "quality": "VF",
+      "title": "Penny Black",
+      "description": "The world's first adhesive postage stamp.",
+      "thumbnailUrl": "/sample-images/uk_1840_1d_vf_thumb.jpg",
+      "imageUrl": "/sample-images/uk_1840_1d_vf.jpg"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+.modal-content-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@media (min-width: 768px) {
+  .modal-content-layout {
+    flex-direction: row;
+  }
+}
