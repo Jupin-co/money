@@ -20,8 +20,8 @@ function App() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8 }}
           >
-            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', marginBottom: 'var(--space-4)' }}>
-              The Collection
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', marginBottom: 'var(--space-4)', fontFamily: 'var(--font-sans)' }}>
+              مجموعه
             </h2>
             <GalleryGrid onSelect={setSelectedItem} />
           </motion.div>
