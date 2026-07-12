@@ -1,0 +1,11 @@
+name = "gallery-app"
+pages_build_output_dir = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gallery-db"
+database_id = "25c992ff-d2a9-414a-a4ce-c2de5ca1267e"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "gallery-images"

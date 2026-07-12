@@ -13,7 +13,11 @@ export const GalleryProvider = ({ children }) => {
   useEffect(() => {
     const fetchCatalog = async () => {
       try {
-        const response = await fetch('/catalog.json');
+        let response = await fetch('/api/catalog');
+        if (!response.ok) {
+          // Fallback to static catalog.json if running in standalone Vite dev server
+          response = await fetch('/catalog.json');
+        }
         if (!response.ok) throw new Error('Failed to fetch catalog');
         const data = await response.json();
         setItems(data.items || []);
