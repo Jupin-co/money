@@ -116,17 +116,33 @@ const ImageCard = ({ item, onClick }) => {
         cursor: isStack ? 'grab' : 'pointer',
       }}
     >
-      {/* Visual Stack Effect Layers - permanently behind everything */}
+      {/* Visual Stack Effect Layers - dynamically generated based on card count */}
       {isStack && (
         <>
-          <div style={{
-            position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', zIndex: -2, rotate: '-3deg', borderRadius: '12px'
-          }} />
-          <div style={{
-            position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-            background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', zIndex: -1, rotate: '1.5deg', borderRadius: '12px'
-          }} />
+          {variants.length >= 2 && (
+            <div style={{
+              position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
+              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', zIndex: -1, rotate: '-2deg', borderRadius: '12px'
+            }} />
+          )}
+          {variants.length >= 3 && (
+            <div style={{
+              position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
+              background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', zIndex: -2, rotate: '1.5deg', borderRadius: '12px'
+            }} />
+          )}
+          {variants.length >= 4 && (
+            <div style={{
+              position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', zIndex: -3, rotate: '-3.5deg', borderRadius: '12px'
+            }} />
+          )}
+          {variants.length >= 5 && (
+            <div style={{
+              position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
+              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', zIndex: -4, rotate: '3deg', borderRadius: '12px'
+            }} />
+          )}
         </>
       )}
 

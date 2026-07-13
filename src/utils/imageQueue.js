@@ -1,14 +1,24 @@
 class ImageQueue {
   constructor() {
     this.queue = [];
+    this.processingSrcs = new Map(); // Tracks concurrent requests: src -> array of callbacks
+    this.cache = new Set();          // Instantly resolves previously loaded images
     this.isProcessing = false;
   }
 
   add(src, callback) {
-    // Prevent duplicate processing
-    if (this.queue.find(item => item.src === src)) return;
+    if (this.cache.has(src)) {
+      callback(src);
+      return;
+    }
     
-    this.queue.push({ src, callback });
+    if (this.processingSrcs.has(src)) {
+      this.processingSrcs.get(src).push(callback);
+      return;
+    }
+
+    this.processingSrcs.set(src, [callback]);
+    this.queue.push(src);
     this.processNext();
   }
 
@@ -16,18 +26,22 @@ class ImageQueue {
     if (this.isProcessing || this.queue.length === 0) return;
     this.isProcessing = true;
 
-    const { src, callback } = this.queue.shift();
+    const src = this.queue.shift();
     const img = new Image();
     img.src = src;
     
     const finish = () => {
-      callback(src);
+      this.cache.add(src);
+      const callbacks = this.processingSrcs.get(src) || [];
+      callbacks.forEach(cb => cb(src));
+      this.processingSrcs.delete(src);
+      
       this.isProcessing = false;
       this.processNext();
     };
 
     img.onload = finish;
-    img.onerror = finish; // Proceed even if an image fails
+    img.onerror = finish;
   }
 }
 
