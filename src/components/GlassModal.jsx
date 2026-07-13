@@ -98,7 +98,9 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
               position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
               background: 'rgba(10, 10, 10, 0.65)',
               backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-              zIndex: 100, cursor: 'zoom-out'
+              zIndex: 100, cursor: 'zoom-out',
+              touchAction: 'none', // Prevents iOS Safari from capturing scroll gestures
+              overscrollBehavior: 'none' // Prevents scroll chaining on modern browsers
             }}
           />
           
@@ -153,10 +155,9 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
                     maxScale={5}
                     centerOnInit={true}
                     wheel={{ step: 0.1 }}
-                    panning={{ disabled: true }}
                     doubleClick={{ disabled: true }}
-                    onPinchingStop={(ref) => ref.resetTransform()}
-                    onWheelStop={(ref) => ref.resetTransform()}
+                    onPinchingStop={(ref) => ref.resetTransform(300, "easeOut")}
+                    onPanningStop={(ref) => ref.resetTransform(300, "easeOut")}
                   >
                     {({ state, resetTransform }) => (
                       <AnimatePresence initial={false} custom={direction}>
@@ -210,7 +211,6 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
                                 alt={item.title}
                                 style={{ 
                                   width: '100%', height: '100%', objectFit: 'contain', 
-                                  padding: '1.5rem', // Margin from edges
                                   pointerEvents: 'auto',
                                   userSelect: 'none', WebkitUserSelect: 'none'
                                 }}
