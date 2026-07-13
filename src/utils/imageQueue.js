@@ -31,6 +31,7 @@ class ImageQueue {
   }
 }
 
-// We use two separate queues so thumbnails always prioritize over low-res
+// We use three separate queues so thumbnails always prioritize over low-res, and low-res over high-res
 export const thumbnailQueue = new ImageQueue();
 export const lowResQueue = new ImageQueue();
+export const highResQueue = new ImageQueue();
