@@ -123,24 +123,27 @@ const ImageCard = ({ item, onClick }) => {
           {variants.length >= 3 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', zIndex: -1, 
-              transform: 'scale(0.90) rotate(2deg) translateY(20px)', borderRadius: '12px'
+              background: '#EAE5D9', borderTop: '1px solid rgba(255,255,255,0.5)', 
+              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -1, 
+              transform: 'scale(0.94) rotate(1deg) translateY(30px)', borderRadius: '12px'
             }} />
           )}
           {/* Card #4 */}
           {variants.length >= 4 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', zIndex: -2, 
-              transform: 'scale(0.85) rotate(-3deg) translateY(30px)', borderRadius: '12px'
+              background: '#DCD6C8', borderTop: '1px solid rgba(255,255,255,0.4)', 
+              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -2, 
+              transform: 'scale(0.91) rotate(-1.5deg) translateY(45px)', borderRadius: '12px'
             }} />
           )}
           {/* Card #5+ */}
           {variants.length >= 5 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', zIndex: -3, 
-              transform: 'scale(0.80) rotate(3deg) translateY(40px)', borderRadius: '12px'
+              background: '#D0C8B6', borderTop: '1px solid rgba(255,255,255,0.3)', 
+              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -3, 
+              transform: 'scale(0.88) rotate(2deg) translateY(60px)', borderRadius: '12px'
             }} />
           )}
         </>
@@ -150,8 +153,8 @@ const ImageCard = ({ item, onClick }) => {
       <div style={{ position: 'relative' }}>
         
         {/* BOTTOM CARD: Static, always rendered, provides height and acts as pre-loader. Also acts visually as Card #2 in the stack! */}
-        {/* Added translateY(10px) so it visibly pokes out from underneath the Top Card before you even drag it! */}
-        <div style={{ opacity: isStack ? 1 : 0, transform: isStack ? 'scale(0.95) rotate(-2deg) translateY(10px)' : 'scale(0.95)', transition: 'transform 0.3s' }}>
+        {/* Increased translate to 15px and scale to 0.97 so it pokes out definitively */}
+        <div style={{ opacity: isStack ? 1 : 0, transform: isStack ? 'scale(0.97) rotate(-1deg) translateY(15px)' : 'scale(0.97)', transition: 'transform 0.3s' }}>
           <CardContent variant={bottomVariant} isStack={isStack} totalVariants={variants.length} />
         </div>
 
