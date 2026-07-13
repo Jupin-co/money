@@ -94,7 +94,8 @@ const Hero = () => {
             position: 'relative',
             transformStyle: 'preserve-3d',
             perspective: '1000px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            willChange: 'transform' // Hardware acceleration hint
           }}
           whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
         >
@@ -108,22 +109,22 @@ const Hero = () => {
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
-            transform: 'translateZ(10.5px)',
+            transform: 'translateZ(10px)',
             filter: isFrontLoaded ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.2)) blur(0px)' : 'blur(5px)',
             transition: 'filter 0.3s ease',
             opacity: frontSrc ? 1 : 0
           }} />
 
-          {/* The Coin Edge (Ultra-dense layers for 90-degree visibility) */}
-          {Array.from({ length: 40 }).map((_, i) => (
+          {/* The Coin Edge (Optimized to 20 layers for mobile GPU performance) */}
+          {Array.from({ length: 20 }).map((_, i) => (
             <div key={i} style={{
               position: 'absolute',
               width: '100%',
               height: '100%',
               borderRadius: '50%',
               background: i % 2 === 0 ? '#b0b0b0' : '#8a8a8a',
-              transform: `translateZ(${(20 - i) * 0.5}px)`,
-              boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)'
+              transform: `translateZ(${(10 - i)}px)`, // 1px steps, 20px total thickness
+              backfaceVisibility: 'hidden' // Reduces render overhead
             }} />
           ))}
           
@@ -137,7 +138,7 @@ const Hero = () => {
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
-            transform: 'rotateY(180deg) translateZ(10.5px)',
+            transform: 'rotateY(180deg) translateZ(10px)',
             filter: isBackLoaded ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.2)) blur(0px)' : 'blur(5px)',
             transition: 'filter 0.3s ease',
             opacity: backSrc ? 1 : 0
