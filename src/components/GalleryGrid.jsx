@@ -10,7 +10,7 @@ const filterLabels = {
   'stamp': 'تمبر'
 };
 
-const BATCH_SIZE = 12;
+const BATCH_SIZE = 50;
 
 // Removed groupItems to show all items separately
 
@@ -20,10 +20,16 @@ const GalleryGrid = ({ onSelect }) => {
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const observerTarget = useRef(null);
 
-  // Filter items
+  // Filter and sort items
   const processedItems = useMemo(() => {
     const filtered = filter === 'all' ? items : items.filter(item => item.type === filter);
-    return filtered;
+    // Sort alphabetically by country, then title
+    return filtered.sort((a, b) => {
+      if (a.country !== b.country) {
+        return a.country.localeCompare(b.country, 'fa');
+      }
+      return a.title.localeCompare(b.title, 'fa');
+    });
   }, [items, filter]);
 
   // Reset visible count when filter changes
