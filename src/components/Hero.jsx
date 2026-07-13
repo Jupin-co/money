@@ -1,15 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { thumbnailQueue, lowResQueue, highResQueue } from '../utils/imageQueue';
+
+const R2_BASE = 'https://pub-4eebccbd3b5c49b4b656b13a58a22a3a.r2.dev/';
 
 const Hero = () => {
   const { scrollY } = useScroll();
   
+  // Progressive loading state
+  const [frontSrc, setFrontSrc] = useState(null);
+  const [backSrc, setBackSrc] = useState(null);
+  const [isFrontLoaded, setIsFrontLoaded] = useState(false);
+  const [isBackLoaded, setIsBackLoaded] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    // Load Front
+    thumbnailQueue.add(`${R2_BASE}coin-front_thumb.png`, (thumbSrc) => {
+      if (!mounted) return;
+      setFrontSrc(prev => prev ? prev : thumbSrc);
+      
+      lowResQueue.add(`${R2_BASE}coin-front_lr.png`, (lrSrc) => {
+        if (!mounted) return;
+        setFrontSrc(lrSrc);
+        setIsFrontLoaded(true);
+        
+        highResQueue.add(`${R2_BASE}coin-front_hr.png`, (hrSrc) => {
+          if (mounted) setFrontSrc(hrSrc);
+        });
+      });
+    });
+
+    // Load Back
+    thumbnailQueue.add(`${R2_BASE}coin-back_thumb.png`, (thumbSrc) => {
+      if (!mounted) return;
+      setBackSrc(prev => prev ? prev : thumbSrc);
+      
+      lowResQueue.add(`${R2_BASE}coin-back_lr.png`, (lrSrc) => {
+        if (!mounted) return;
+        setBackSrc(lrSrc);
+        setIsBackLoaded(true);
+        
+        highResQueue.add(`${R2_BASE}coin-back_hr.png`, (hrSrc) => {
+          if (mounted) setBackSrc(hrSrc);
+        });
+      });
+    });
+
+    return () => { mounted = false; };
+  }, []);
+
   // Create parallax and rotation effects tied to scroll
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   
   // Rotate the coin from 0 to 180 degrees (Front to Back)
-  // Spin is slightly faster now (completes in 400px of scrolling)
   const rotateY = useTransform(scrollY, [0, 400], [0, 180], { clamp: true });
   const scale = useTransform(scrollY, [0, 400], [1, 1.2], { clamp: true });
 
@@ -52,15 +98,20 @@ const Hero = () => {
           }}
           whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
         >
-          {/* Front Face (Lion and Sun) - Pushed out to 10.5px to sit on top of edge layers */}
+          {/* Front Face (Lion and Sun) */}
           <div style={{
             position: 'absolute',
             width: '100%',
             height: '100%',
             backfaceVisibility: 'hidden',
-            background: 'url(./images/coin-front.png) center/contain no-repeat',
+            backgroundImage: frontSrc ? `url(${frontSrc})` : 'none',
+            backgroundPosition: 'center',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
             transform: 'translateZ(10.5px)',
-            filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.2))'
+            filter: isFrontLoaded ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.2)) blur(0px)' : 'blur(5px)',
+            transition: 'filter 0.3s ease',
+            opacity: frontSrc ? 1 : 0
           }} />
 
           {/* The Coin Edge (Ultra-dense layers for 90-degree visibility) */}
@@ -70,21 +121,26 @@ const Hero = () => {
               width: '100%',
               height: '100%',
               borderRadius: '50%',
-              background: i % 2 === 0 ? '#b0b0b0' : '#8a8a8a', // Creates a ridged edge texture
+              background: i % 2 === 0 ? '#b0b0b0' : '#8a8a8a',
               transform: `translateZ(${(20 - i) * 0.5}px)`,
               boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)'
             }} />
           ))}
           
-          {/* Back Face (Ahmad Shah Qajar) - Pushed out to 10.5px */}
+          {/* Back Face (Ahmad Shah Qajar) */}
           <div style={{
             position: 'absolute',
             width: '100%',
             height: '100%',
             backfaceVisibility: 'hidden',
-            background: 'url(./images/coin-back.png) center/contain no-repeat',
+            backgroundImage: backSrc ? `url(${backSrc})` : 'none',
+            backgroundPosition: 'center',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
             transform: 'rotateY(180deg) translateZ(10.5px)',
-            filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.2))'
+            filter: isBackLoaded ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.2)) blur(0px)' : 'blur(5px)',
+            transition: 'filter 0.3s ease',
+            opacity: backSrc ? 1 : 0
           }} />
         </motion.div>
         
