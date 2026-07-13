@@ -6,6 +6,7 @@ import { thumbnailQueue, lowResQueue } from '../utils/imageQueue';
 const currencyDict = {
   'ایران': 'ریال',
   'امارات': 'درهم',
+  'قطر': 'دینار',
   'افغانستان': 'افغانی',
   'سوئیس': 'فرانک',
   'عراق': 'دینار',
