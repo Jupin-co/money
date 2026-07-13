@@ -119,25 +119,28 @@ const ImageCard = ({ item, onClick }) => {
       {/* Visual Stack Effect Layers - dynamically generated based on card count */}
       {isStack && (
         <>
-          {/* Card #3 */}
+          {/* Card #3 (Behind Bottom Card) */}
           {variants.length >= 3 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', zIndex: -1, rotate: '1.5deg', borderRadius: '12px'
+              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', zIndex: -1, 
+              transform: 'scale(0.90) rotate(2deg) translateY(20px)', borderRadius: '12px'
             }} />
           )}
           {/* Card #4 */}
           {variants.length >= 4 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', zIndex: -2, rotate: '-3.5deg', borderRadius: '12px'
+              background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', zIndex: -2, 
+              transform: 'scale(0.85) rotate(-3deg) translateY(30px)', borderRadius: '12px'
             }} />
           )}
           {/* Card #5+ */}
           {variants.length >= 5 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', zIndex: -3, rotate: '3deg', borderRadius: '12px'
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', zIndex: -3, 
+              transform: 'scale(0.80) rotate(3deg) translateY(40px)', borderRadius: '12px'
             }} />
           )}
         </>
@@ -147,7 +150,8 @@ const ImageCard = ({ item, onClick }) => {
       <div style={{ position: 'relative' }}>
         
         {/* BOTTOM CARD: Static, always rendered, provides height and acts as pre-loader. Also acts visually as Card #2 in the stack! */}
-        <div style={{ opacity: isStack ? 1 : 0, transform: isStack ? 'scale(0.95) rotate(-2deg)' : 'scale(0.95)', transition: 'transform 0.3s' }}>
+        {/* Added translateY(10px) so it visibly pokes out from underneath the Top Card before you even drag it! */}
+        <div style={{ opacity: isStack ? 1 : 0, transform: isStack ? 'scale(0.95) rotate(-2deg) translateY(10px)' : 'scale(0.95)', transition: 'transform 0.3s' }}>
           <CardContent variant={bottomVariant} isStack={isStack} totalVariants={variants.length} />
         </div>
 
