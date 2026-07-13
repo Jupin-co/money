@@ -12,7 +12,28 @@ const filterLabels = {
 
 const BATCH_SIZE = 50;
 
-// Removed groupItems to show all items separately
+const groupItems = (items) => {
+  const groups = {};
+  items.forEach(item => {
+    const key = `${item.country}_${item.value}`;
+    if (!groups[key]) {
+      groups[key] = {
+        id: key,
+        ...item,
+        isStack: true,
+        variants: [item]
+      };
+    } else {
+      groups[key].variants.push(item);
+    }
+  });
+  return Object.values(groups).map(group => {
+    if (group.variants.length === 1) {
+      return group.variants[0];
+    }
+    return group;
+  });
+};
 
 const GalleryGrid = ({ onSelect }) => {
   const { items, loading } = useGalleryData();
@@ -20,15 +41,25 @@ const GalleryGrid = ({ onSelect }) => {
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const observerTarget = useRef(null);
 
-  // Filter and sort items
+  // Filter, group, and sort items
   const processedItems = useMemo(() => {
     const filtered = filter === 'all' ? items : items.filter(item => item.type === filter);
-    // Sort alphabetically by country, then title
-    return filtered.sort((a, b) => {
+    
+    // Group items by country and value
+    const grouped = groupItems(filtered);
+
+    // Sort alphabetically by country, then value (converted to number for proper sorting)
+    return grouped.sort((a, b) => {
       if (a.country !== b.country) {
         return a.country.localeCompare(b.country, 'fa');
       }
-      return a.title.localeCompare(b.title, 'fa');
+      // Sort numerically by value if possible, otherwise string sort
+      const numA = parseFloat(a.value);
+      const numB = parseFloat(b.value);
+      if (!isNaN(numA) && !isNaN(numB)) {
+        return numA - numB;
+      }
+      return a.value.toString().localeCompare(b.value.toString(), 'fa');
     });
   }, [items, filter]);
 

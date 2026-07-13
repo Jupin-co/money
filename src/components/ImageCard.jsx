@@ -3,6 +3,24 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { thumbnailQueue, lowResQueue } from '../utils/imageQueue';
 
 // Extracted inner card component to render twice (Top and Bottom)
+const currencyDict = {
+  'ایران': 'ریال',
+  'امارات': 'درهم',
+  'افغانستان': 'افغانی',
+  'سوئیس': 'فرانک',
+  'عراق': 'دینار',
+  'آلمان': 'مارک',
+  'عربستان': 'ریال',
+  'پاکستان': 'روپیه',
+  'نیجریه': 'نایرا',
+  'تایلند': 'بات',
+  'روسیه': 'روبل',
+  'انگلیس': 'پوند',
+  'یوگسلاوی': 'دینار',
+  'ایتالیا': 'لیر',
+  'فرانسه': 'فرانک'
+};
+
 const CardContent = ({ variant, isStack, totalVariants }) => {
   const [currentSrc, setCurrentSrc] = useState(null);
   const [isLowResLoaded, setIsLowResLoaded] = useState(false);
@@ -76,7 +94,9 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
           paddingTop: '0.1rem',
           paddingBottom: '0.4rem' // Extra space for deep descenders
         }}>
-          {variant.country && variant.country !== 'Unknown' ? `${variant.country} - ${variant.value}` : variant.value}
+          {variant.country && variant.country !== 'Unknown' 
+            ? `${variant.country} - ${variant.value} ${currencyDict[variant.country] || ''}` 
+            : variant.value}
         </h3>
       </div>
     </div>
