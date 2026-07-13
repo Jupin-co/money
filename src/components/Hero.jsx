@@ -123,8 +123,7 @@ const Hero = () => {
               height: '100%',
               borderRadius: '50%',
               background: i % 2 === 0 ? '#b0b0b0' : '#8a8a8a',
-              transform: `translateZ(${(10 - i)}px)`, // 1px steps, 20px total thickness
-              backfaceVisibility: 'hidden' // Reduces render overhead
+              transform: `translateZ(${(10 - i)}px)` // 1px steps, 20px total thickness
             }} />
           ))}
           
