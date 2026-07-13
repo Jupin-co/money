@@ -12,25 +12,7 @@ const filterLabels = {
 
 const BATCH_SIZE = 12;
 
-// Group items into "Stacks" if they are visually identical variants
-const groupItems = (items) => {
-  const groups = {};
-  items.forEach(item => {
-    const key = `${item.type}-${item.country}-${item.year}-${item.title}`;
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(item);
-  });
-  
-  return Object.values(groups).map(group => {
-    if (group.length === 1) return group[0];
-    return {
-      isStack: true,
-      id: group[0].id + '_stack',
-      type: group[0].type,
-      variants: group
-    };
-  });
-};
+// Removed groupItems to show all items separately
 
 const GalleryGrid = ({ onSelect }) => {
   const { items, loading } = useGalleryData();
@@ -38,10 +20,10 @@ const GalleryGrid = ({ onSelect }) => {
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const observerTarget = useRef(null);
 
-  // Filter and group items
+  // Filter items
   const processedItems = useMemo(() => {
     const filtered = filter === 'all' ? items : items.filter(item => item.type === filter);
-    return groupItems(filtered);
+    return filtered;
   }, [items, filter]);
 
   // Reset visible count when filter changes
