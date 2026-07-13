@@ -2,19 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { thumbnailQueue, lowResQueue } from '../utils/imageQueue';
 
-const swipeConfidenceThreshold = 5000;
-const swipePower = (offset, velocity) => {
-  return Math.abs(offset) * velocity;
-};
-
-const ImageCard = ({ item, onClick }) => {
-  const isStack = item.isStack;
-  const variants = isStack ? item.variants : [item];
-  
-  const [[page, direction], setPage] = useState([0, 0]);
-  const activeIndex = Math.abs(page % variants.length);
-  const currentVariant = variants[activeIndex];
-
+// Extracted inner card component to render twice (Top and Bottom)
+const CardContent = ({ variant, isStack, totalVariants }) => {
   const [currentSrc, setCurrentSrc] = useState(null);
   const [isLowResLoaded, setIsLowResLoaded] = useState(false);
 
@@ -22,47 +11,100 @@ const ImageCard = ({ item, onClick }) => {
     let mounted = true;
     setIsLowResLoaded(false);
 
-    thumbnailQueue.add(currentVariant.thumbnailUrl, (src) => {
+    thumbnailQueue.add(variant.thumbnailUrl, (src) => {
       if (mounted && !isLowResLoaded) {
         setCurrentSrc(src);
-        
-        lowResQueue.add(currentVariant.lowResUrl, (lowResSrc) => {
-          if (mounted) {
-            setCurrentSrc(lowResSrc);
-            setIsLowResLoaded(true);
-          }
+        lowResQueue.add(variant.lowResUrl, (lowResSrc) => {
+          if (mounted) { setCurrentSrc(lowResSrc); setIsLowResLoaded(true); }
         });
       }
     });
 
     return () => { mounted = false; };
-  }, [currentVariant]);
+  }, [variant]);
+
+  return (
+    <div style={{
+      width: '100%', height: '100%',
+      background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.02) 40%, rgba(255,255,255,0) 100%)',
+      backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+      borderTop: '1px solid rgba(255,255,255,0.3)',
+      borderLeft: '1px solid rgba(255,255,255,0.3)',
+      borderRight: '1px solid rgba(255,255,255,0.05)',
+      borderBottom: '1px solid rgba(255,255,255,0.05)',
+      borderRadius: '12px',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+    }}>
+      <div style={{ position: 'relative', width: '100%', paddingTop: '100%' }}>
+        {currentSrc && (
+          <motion.img
+            src={currentSrc}
+            alt={variant.title}
+            animate={{ filter: isLowResLoaded ? 'drop-shadow(0 10px 15px rgba(0,0,0,0.5)) blur(0px)' : 'blur(5px)', opacity: 1 }}
+            initial={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{ position: 'absolute', top: '5%', left: '5%', width: '90%', height: '90%', objectFit: 'contain', pointerEvents: 'none' }}
+            draggable="false"
+          />
+        )}
+      </div>
+      <div style={{ 
+        padding: '1rem', background: '#EAE5D9', 
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.08\'/%3E%3C/svg%3E")',
+        borderTop: '1px solid #D5CDBF', color: '#1F1A15', position: 'relative'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#9B8563', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>
+            {variant.country} • {variant.year}
+          </div>
+          {isStack && (
+            <div style={{ fontSize: '0.7rem', background: '#110e0c', color: '#EAE5D9', padding: '0.1rem 0.4rem', borderRadius: '10px', fontFamily: 'var(--font-sans)' }}>
+              {totalVariants} نسخه
+            </div>
+          )}
+        </div>
+        <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, fontFamily: 'var(--font-sans)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {variant.title}
+        </h3>
+      </div>
+    </div>
+  );
+};
+
+const ImageCard = ({ item, onClick }) => {
+  const isStack = item.isStack;
+  const variants = isStack ? item.variants : [item];
+  
+  const [[page, direction], setPage] = useState([0, 0]);
+  const [dragOffset, setDragOffset] = useState(0);
+
+  const len = variants.length;
+  // Proper array wrapping for negative numbers
+  const activeIndex = ((page % len) + len) % len;
+  const currentVariant = variants[activeIndex];
+
+  // The bottom card predicts which way the user is dragging!
+  const bottomOffset = dragOffset > 0 ? -1 : 1;
+  const bottomIndex = (((page + bottomOffset) % len) + len) % len;
+  const bottomVariant = variants[bottomIndex];
 
   const paginate = (newDirection) => {
     if (!isStack) return;
-    const nextIndex = page + newDirection;
-    if (nextIndex < 0 || nextIndex >= variants.length) return; // Prevent swiping past edges
-    setPage([nextIndex, newDirection]);
+    setPage([page + newDirection, newDirection]);
+    setDragOffset(0);
   };
 
   const variantsAnimation = {
-    enter: (direction) => ({
-      x: direction > 0 ? 100 : -100,
-      opacity: 0,
-      scale: 0.95,
-      zIndex: 0,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
+    enter: { scale: 0.95, opacity: 1, x: 0 },
+    center: { scale: 1, opacity: 1, x: 0 },
     exit: (direction) => ({
-      zIndex: 0,
-      x: direction < 0 ? 100 : -100,
+      x: direction < 0 ? 300 : -300,
       opacity: 0,
-      scale: 0.95,
+      scale: 1,
+      transition: { duration: 0.3 }
     })
   };
 
@@ -74,7 +116,7 @@ const ImageCard = ({ item, onClick }) => {
         cursor: isStack ? 'grab' : 'pointer',
       }}
     >
-      {/* Visual Stack Effect Layers - stay still at the bottom */}
+      {/* Visual Stack Effect Layers - permanently behind everything */}
       {isStack && (
         <>
           <div style={{
@@ -88,8 +130,15 @@ const ImageCard = ({ item, onClick }) => {
         </>
       )}
 
-      {/* Grid Stacking Trick: Prevents the wrapper from losing height during animation */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gridTemplateRows: '1fr' }}>
+      {/* Container maintains exact height dictated by the static bottom card */}
+      <div style={{ position: 'relative' }}>
+        
+        {/* BOTTOM CARD: Static, always rendered, provides height and acts as pre-loader */}
+        <div style={{ opacity: isStack ? 1 : 0, transform: 'scale(0.95)', transition: 'transform 0.3s' }}>
+          <CardContent variant={bottomVariant} isStack={isStack} totalVariants={variants.length} />
+        </div>
+
+        {/* TOP CARD: Draggable, flies off when swiped */}
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={page}
@@ -98,39 +147,31 @@ const ImageCard = ({ item, onClick }) => {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+            transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, scale: { duration: 0.2 } }}
             drag={isStack ? "x" : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
             onClick={() => onClick(item, activeIndex)}
-            onDragEnd={(e, { offset, velocity }) => {
-              const swipe = swipePower(offset.x, velocity.x);
-              if (swipe < -swipeConfidenceThreshold) {
+            onDrag={(e, info) => setDragOffset(info.offset.x)}
+            onDragEnd={(e, { offset }) => {
+              // Strict distance threshold for flawless desktop and mobile swiping
+              if (offset.x < -50) {
                 paginate(1);
-              } else if (swipe > swipeConfidenceThreshold) {
+              } else if (offset.x > 50) {
                 paginate(-1);
+              } else {
+                setDragOffset(0);
               }
             }}
             style={{
-              gridColumn: 1, // Force into same grid cell
-              gridRow: 1,    // Force into same grid cell
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.02) 40%, rgba(255,255,255,0) 100%)',
-              backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
-              borderTop: '1px solid rgba(255,255,255,0.3)',
-              borderLeft: '1px solid rgba(255,255,255,0.3)',
-              borderRight: '1px solid rgba(255,255,255,0.05)',
-              borderBottom: '1px solid rgba(255,255,255,0.05)',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+              position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+              cursor: isStack ? 'grab' : 'pointer',
+              zIndex: 10
             }}
             whileDrag={{ cursor: "grabbing" }}
           >
-            {/* Miniature Navigation Dots */}
             {isStack && (
-              <div style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', gap: '4px', zIndex: 10 }}>
+              <div style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', gap: '4px', zIndex: 20 }}>
                 {variants.map((_, idx) => (
                   <div
                     key={idx}
@@ -144,57 +185,7 @@ const ImageCard = ({ item, onClick }) => {
                 ))}
               </div>
             )}
-
-            {/* Image Area */}
-            <div style={{ position: 'relative', width: '100%', paddingTop: '100%' }}>
-              {currentSrc && (
-                <motion.img
-                  src={currentSrc}
-                  alt={currentVariant.title}
-                  animate={{ filter: isLowResLoaded ? 'drop-shadow(0 10px 15px rgba(0,0,0,0.5)) blur(0px)' : 'blur(5px)', opacity: 1 }}
-                  initial={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  style={{
-                    position: 'absolute', top: '5%', left: '5%',
-                    width: '90%', height: '90%', objectFit: 'contain',
-                    pointerEvents: 'none'
-                  }}
-                  draggable="false"
-                />
-              )}
-            </div>
-
-            {/* Physical Paper Label */}
-            <div style={{ 
-              padding: '1rem', 
-              background: '#EAE5D9', 
-              backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.08\'/%3E%3C/svg%3E")',
-              borderTop: '1px solid #D5CDBF',
-              color: '#1F1A15',
-              position: 'relative'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-                <div style={{ fontSize: '0.75rem', color: '#9B8563', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>
-                  {currentVariant.country} • {currentVariant.year}
-                </div>
-                {isStack && (
-                  <div style={{ fontSize: '0.7rem', background: '#110e0c', color: '#EAE5D9', padding: '0.1rem 0.4rem', borderRadius: '10px', fontFamily: 'var(--font-sans)' }}>
-                    {variants.length} نسخه
-                  </div>
-                )}
-              </div>
-              <h3 style={{ 
-                margin: 0, 
-                fontSize: '1rem', 
-                fontWeight: 600, 
-                fontFamily: 'var(--font-sans)',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}>
-                {currentVariant.title}
-              </h3>
-            </div>
+            <CardContent variant={currentVariant} isStack={isStack} totalVariants={variants.length} />
           </motion.div>
         </AnimatePresence>
       </div>
