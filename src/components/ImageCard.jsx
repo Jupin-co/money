@@ -76,7 +76,7 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
           paddingTop: '0.1rem',
           paddingBottom: '0.1rem'
         }}>
-          {variant.value}
+          {variant.country && variant.country !== 'Unknown' ? `${variant.country} - ${variant.value}` : variant.value}
         </h3>
       </div>
     </div>
