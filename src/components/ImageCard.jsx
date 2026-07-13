@@ -52,7 +52,7 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
         )}
       </div>
       <div style={{ 
-        padding: '0.5rem 0.75rem', background: '#FDFBF7', 
+        padding: '0.5rem 0.75rem 1rem 0.75rem', background: '#FDFBF7', 
         backgroundImage: 'radial-gradient(circle at top left, #FFFFFF 0%, #EAE5D9 100%), url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.05\'/%3E%3C/svg%3E")',
         borderTop: '1px solid #D5CDBF', color: '#1F1A15', position: 'relative'
       }}>
@@ -72,9 +72,9 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
           whiteSpace: 'nowrap', 
           overflow: 'hidden', 
           textOverflow: 'ellipsis',
-          lineHeight: '1.6', // Nastaliq requires tall line height
+          lineHeight: '1.8', // Nastaliq requires exceptionally tall line height
           paddingTop: '0.1rem',
-          paddingBottom: '0.1rem'
+          paddingBottom: '0.4rem' // Extra space for deep descenders
         }}>
           {variant.country && variant.country !== 'Unknown' ? `${variant.country} - ${variant.value}` : variant.value}
         </h3>
