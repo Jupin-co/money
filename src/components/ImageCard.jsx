@@ -15,7 +15,7 @@ const currencyDict = {
   'نیجریه': 'نایرا',
   'تایلند': 'بات',
   'روسیه': 'روبل',
-  'انگلیس': 'پوند',
+  'انگلستان': 'پوند',
   'یوگسلاوی': 'دینار',
   'ایتالیا': 'لیر',
   'فرانسه': 'فرانک'
@@ -69,8 +69,8 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
           />
         )}
       </div>
-      <div style={{ 
-        padding: '0.5rem 0.75rem 1rem 0.75rem', background: '#FDFBF7', 
+      <div style={{
+        padding: '0.5rem 0.75rem 1rem 0.75rem', background: '#FDFBF7',
         backgroundImage: 'radial-gradient(circle at top left, #FFFFFF 0%, #EAE5D9 100%), url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.05\'/%3E%3C/svg%3E")',
         borderTop: '1px solid #D5CDBF', color: '#1F1A15', position: 'relative'
       }}>
@@ -81,21 +81,21 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
             </div>
           </div>
         )}
-        <h3 style={{ 
-          margin: 0, 
-          fontSize: '1.4rem', 
-          fontWeight: 400, 
-          fontFamily: '"Noto Nastaliq Urdu", serif', 
+        <h3 style={{
+          margin: 0,
+          fontSize: '1.4rem',
+          fontWeight: 400,
+          fontFamily: '"Noto Nastaliq Urdu", serif',
           color: '#1c3b72', // Deep fountain pen blue ink
-          whiteSpace: 'nowrap', 
-          overflow: 'hidden', 
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
           textOverflow: 'ellipsis',
           lineHeight: '1.8', // Nastaliq requires exceptionally tall line height
           paddingTop: '0.1rem',
           paddingBottom: '0.4rem' // Extra space for deep descenders
         }}>
-          {variant.country && variant.country !== 'Unknown' 
-            ? `${variant.country} - ${variant.value} ${currencyDict[variant.country] || ''}` 
+          {variant.country && variant.country !== 'Unknown'
+            ? `${variant.country} - ${variant.value} ${currencyDict[variant.country] || ''}`
             : variant.value}
         </h3>
       </div>
@@ -106,7 +106,7 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
 const ImageCard = ({ item, onClick }) => {
   const isStack = item.isStack;
   const variants = isStack ? item.variants : [item];
-  
+
   const [[page, direction], setPage] = useState([0, 0]);
   const [dragOffset, setDragOffset] = useState(0);
 
@@ -152,8 +152,8 @@ const ImageCard = ({ item, onClick }) => {
           {variants.length >= 3 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: '#EAE5D9', borderTop: '1px solid rgba(255,255,255,0.5)', 
-              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -1, 
+              background: '#EAE5D9', borderTop: '1px solid rgba(255,255,255,0.5)',
+              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -1,
               transform: 'scale(0.94) rotate(1deg) translateY(30px)', borderRadius: '12px'
             }} />
           )}
@@ -161,8 +161,8 @@ const ImageCard = ({ item, onClick }) => {
           {variants.length >= 4 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: '#DCD6C8', borderTop: '1px solid rgba(255,255,255,0.4)', 
-              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -2, 
+              background: '#DCD6C8', borderTop: '1px solid rgba(255,255,255,0.4)',
+              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -2,
               transform: 'scale(0.91) rotate(-1.5deg) translateY(45px)', borderRadius: '12px'
             }} />
           )}
@@ -170,8 +170,8 @@ const ImageCard = ({ item, onClick }) => {
           {variants.length >= 5 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: '#D0C8B6', borderTop: '1px solid rgba(255,255,255,0.3)', 
-              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -3, 
+              background: '#D0C8B6', borderTop: '1px solid rgba(255,255,255,0.3)',
+              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -3,
               transform: 'scale(0.88) rotate(2deg) translateY(60px)', borderRadius: '12px'
             }} />
           )}
@@ -180,7 +180,7 @@ const ImageCard = ({ item, onClick }) => {
 
       {/* Container maintains exact height dictated by the static bottom card */}
       <div style={{ position: 'relative' }}>
-        
+
         {/* BOTTOM CARD: Static, always rendered, provides height and acts as pre-loader. Also acts visually as Card #2 in the stack! */}
         {/* Increased translate to 15px and scale to 0.97 so it pokes out definitively */}
         <div style={{ opacity: isStack ? 1 : 0, transform: isStack ? 'scale(0.97) rotate(-1deg) translateY(15px)' : 'scale(0.97)', transition: 'transform 0.3s' }}>
