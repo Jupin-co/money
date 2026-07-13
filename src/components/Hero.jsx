@@ -88,72 +88,97 @@ const Hero = () => {
           </p>
         </motion.div>
         
-        {/* Ambient Sunset Light behind the coin */}
-        <motion.div style={{
-          position: 'absolute',
-          width: '500px',
-          height: '500px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255, 180, 70, 0.3) 0%, rgba(200, 100, 20, 0.1) 50%, rgba(0,0,0,0) 80%)',
-          filter: 'blur(80px)',
-          x: lightX,
-          y: lightY,
-          zIndex: 2, // Behind the coin and shadow
-          pointerEvents: 'none'
-        }} />
-
-        {/* Mystic Snake Glow (Orbits the coin in a jagged hexa-pattern) */}
-        <motion.div
-          style={{
+        {/* Visual elements container - positions everything relative to the exact center of the coin */}
+        <div style={{ position: 'relative', width: '250px', height: '250px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          
+          {/* Ambient Sunset Light behind the coin */}
+          <motion.div style={{
             position: 'absolute',
-            width: '250px',
-            height: '10px',
+            width: '500px',
+            height: '500px',
             borderRadius: '50%',
-            background: 'linear-gradient(90deg, #000080 0%, #1e3a8a 30%, #ec4899 60%, #8b5cf6 100%)',
-            filter: 'blur(10px)',
+            background: 'radial-gradient(circle, rgba(255, 180, 70, 0.3) 0%, rgba(200, 100, 20, 0.1) 50%, rgba(0,0,0,0) 80%)',
+            filter: 'blur(80px)',
+            x: lightX,
+            y: lightY,
+            zIndex: 2, // Behind the coin and shadow
+            pointerEvents: 'none'
+          }} />
+
+          {/* Mystic SVG Snake Glow (True curved slithering line) */}
+          <div style={{
+            position: 'absolute',
+            width: '500px',
+            height: '500px',
             zIndex: 3, // In front of the sun, behind the coin and shadow
             pointerEvents: 'none'
-          }}
-          animate={{
-            x: [0, 180, 140, -50, -190, -130, 0],
-            y: [-190, -70, 160, 190, 60, -150, -190],
-            rotate: [0, 115, 235, 345, 470, 590, 720], // Organic chaotic tumble
-            opacity: [0.1, 0.9, 0.2, 1, 0.1, 0.8, 0.1], // Smooth, slow blinking
-            scale: [1, 1.5, 0.8, 1.4, 0.9, 1.6, 1] // Breathing thickness
-          }}
-          transition={{
-            duration: 14,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
+          }}>
+            <motion.svg width="500" height="500" viewBox="0 0 500 500"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+            >
+              <defs>
+                <linearGradient id="snakeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#000080" />
+                  <stop offset="30%" stopColor="#1e3a8a" />
+                  <stop offset="60%" stopColor="#ec4899" />
+                  <stop offset="100%" stopColor="#8b5cf6" />
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <motion.path
+                d="M 250 50 C 400 50, 450 200, 400 350 C 350 500, 100 450, 80 300 C 50 150, 100 50, 250 50"
+                fill="none"
+                stroke="url(#snakeGrad)"
+                strokeWidth="12"
+                strokeLinecap="round"
+                filter="url(#glow)"
+                initial={{ pathLength: 0, pathOffset: 0 }}
+                animate={{ 
+                  pathLength: [0.15, 0.3, 0.15], 
+                  pathOffset: [0, 1] 
+                }}
+                transition={{ 
+                  duration: 8, 
+                  repeat: Infinity, 
+                  ease: "linear" 
+                }}
+              />
+            </motion.svg>
+          </div>
 
-        {/* Static shadow behind the coin (incredibly fast to render) */}
-        <div style={{
-          position: 'absolute',
-          width: '250px',
-          height: '250px',
-          borderRadius: '50%',
-          boxShadow: '0 30px 60px rgba(0,0,0,0.4)',
-          zIndex: 5,
-          pointerEvents: 'none'
-        }} />
-
-        {/* The 3D Gamified Coin */}
-        <motion.div
-          style={{
-            rotateY,
-            scale,
+          {/* Static shadow behind the coin (incredibly fast to render) */}
+          <div style={{
+            position: 'absolute',
             width: '250px',
             height: '250px',
-            position: 'relative',
-            transformStyle: 'preserve-3d',
-            perspective: '1000px',
-            cursor: 'pointer',
-            zIndex: 10
-          }}
-          whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
-        >
+            borderRadius: '50%',
+            boxShadow: '0 30px 60px rgba(0,0,0,0.4)',
+            zIndex: 5,
+            pointerEvents: 'none'
+          }} />
+
+          {/* The 3D Gamified Coin */}
+          <motion.div
+            style={{
+              rotateY,
+              scale,
+              width: '250px',
+              height: '250px',
+              position: 'relative',
+              transformStyle: 'preserve-3d',
+              perspective: '1000px',
+              cursor: 'pointer',
+              zIndex: 10
+            }}
+            whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
+          >
           {/* Front Face (Lion and Sun) - 4px for an 8px thick coin */}
           <div style={{
             position: 'absolute',
@@ -198,6 +223,7 @@ const Hero = () => {
             opacity: backSrc ? 1 : 0
           }} />
         </motion.div>
+        </div>
         
         <motion.div 
           style={{ marginTop: '4rem', color: 'var(--muted-foreground)', fontFamily: 'var(--font-sans)', letterSpacing: '0.1em' }}
