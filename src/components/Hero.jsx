@@ -95,11 +95,11 @@ const Hero = () => {
             transformStyle: 'preserve-3d',
             perspective: '1000px',
             cursor: 'pointer',
-            willChange: 'transform' // Hardware acceleration hint
+            willChange: 'transform'
           }}
           whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
         >
-          {/* Front Face (Lion and Sun) */}
+          {/* Front Face (Lion and Sun) - 10.5px to sit cleanly above edge layers */}
           <div style={{
             position: 'absolute',
             width: '100%',
@@ -109,21 +109,21 @@ const Hero = () => {
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
-            transform: 'translateZ(10px)',
+            transform: 'translateZ(10.5px)',
             filter: isFrontLoaded ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.2)) blur(0px)' : 'blur(5px)',
             transition: 'filter 0.3s ease',
             opacity: frontSrc ? 1 : 0
           }} />
 
-          {/* The Coin Edge (Optimized to 20 layers for mobile GPU performance) */}
-          {Array.from({ length: 20 }).map((_, i) => (
+          {/* The Coin Edge (Balanced to 30 layers for smooth visuals + good performance) */}
+          {Array.from({ length: 30 }).map((_, i) => (
             <div key={i} style={{
               position: 'absolute',
               width: '100%',
               height: '100%',
               borderRadius: '50%',
               background: i % 2 === 0 ? '#b0b0b0' : '#8a8a8a',
-              transform: `translateZ(${(10 - i)}px)` // 1px steps, 20px total thickness
+              transform: `translateZ(${10 - (i * 0.66)}px)` // 0.66px steps for 20px total thickness
             }} />
           ))}
           
