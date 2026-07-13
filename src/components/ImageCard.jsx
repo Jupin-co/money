@@ -52,16 +52,16 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
         )}
       </div>
       <div style={{ 
-        padding: '1rem', background: '#EAE5D9', 
+        padding: '0.5rem 0.75rem', background: '#EAE5D9', 
         backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'paper\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.04\' result=\'noise\' numOctaves=\'5\' /%3E%3CfeDiffuseLighting in=\'noise\' lighting-color=\'%23fff\' surfaceScale=\'2\'%3E%3CfeDistantLight azimuth=\'45\' elevation=\'60\' /%3E%3C/feDiffuseLighting%3E%3CfeBlend mode=\'multiply\' in=\'SourceGraphic\' in2=\'noise\' /%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23paper)\' opacity=\'0.4\'/%3E%3C/svg%3E")',
         borderTop: '1px solid #D5CDBF', color: '#1F1A15', position: 'relative'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.15rem' }}>
           <div style={{ fontSize: '0.75rem', color: '#9B8563', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>
-            {variant.country} • {variant.year}
+            {variant.country} {variant.year ? `• ${variant.year}` : ''}
           </div>
           {isStack && (
-            <div style={{ fontSize: '0.7rem', background: '#110e0c', color: '#EAE5D9', padding: '0.1rem 0.4rem', borderRadius: '10px', fontFamily: 'var(--font-sans)' }}>
+            <div style={{ fontSize: '0.65rem', background: '#110e0c', color: '#EAE5D9', padding: '0.1rem 0.4rem', borderRadius: '10px', fontFamily: 'var(--font-sans)' }}>
               {totalVariants} نسخه
             </div>
           )}
@@ -75,11 +75,11 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
           whiteSpace: 'nowrap', 
           overflow: 'hidden', 
           textOverflow: 'ellipsis',
-          lineHeight: '1.7', // Nastaliq requires tall line height
-          paddingTop: '0.2rem',
-          paddingBottom: '0.2rem'
+          lineHeight: '1.6', // Nastaliq requires tall line height
+          paddingTop: '0.1rem',
+          paddingBottom: '0.1rem'
         }}>
-          {variant.title}
+          {variant.value}
         </h3>
       </div>
     </div>

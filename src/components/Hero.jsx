@@ -59,6 +59,10 @@ const Hero = () => {
   const rotateY = useTransform(scrollY, [0, 400], [0, 180], { clamp: true });
   const scale = useTransform(scrollY, [0, 400], [1, 1.2], { clamp: true });
 
+  // Ambient light "Sun" parallax effect (Right to Left arc)
+  const lightX = useTransform(scrollY, [0, 600], ['300px', '-300px'], { clamp: true });
+  const lightY = useTransform(scrollY, [0, 300, 600], ['100px', '-50px', '100px'], { clamp: true });
+
   return (
     <div style={{
       position: 'relative',
@@ -84,6 +88,46 @@ const Hero = () => {
           </p>
         </motion.div>
         
+        {/* Ambient Sunset Light behind the coin */}
+        <motion.div style={{
+          position: 'absolute',
+          width: '500px',
+          height: '500px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(255, 180, 70, 0.3) 0%, rgba(200, 100, 20, 0.1) 50%, rgba(0,0,0,0) 80%)',
+          filter: 'blur(80px)',
+          x: lightX,
+          y: lightY,
+          zIndex: 2, // Behind the coin and shadow
+          pointerEvents: 'none'
+        }} />
+
+        {/* Mystic Snake Glow (Orbits the coin in a jagged hexa-pattern) */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            width: '250px',
+            height: '10px',
+            borderRadius: '50%',
+            background: 'linear-gradient(90deg, #000080 0%, #1e3a8a 30%, #ec4899 60%, #8b5cf6 100%)',
+            filter: 'blur(10px)',
+            zIndex: 3, // In front of the sun, behind the coin and shadow
+            pointerEvents: 'none'
+          }}
+          animate={{
+            x: [0, 180, 140, -50, -190, -130, 0],
+            y: [-190, -70, 160, 190, 60, -150, -190],
+            rotate: [0, 115, 235, 345, 470, 590, 720], // Organic chaotic tumble
+            opacity: [0.1, 0.9, 0.2, 1, 0.1, 0.8, 0.1], // Smooth, slow blinking
+            scale: [1, 1.5, 0.8, 1.4, 0.9, 1.6, 1] // Breathing thickness
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+
         {/* Static shadow behind the coin (incredibly fast to render) */}
         <div style={{
           position: 'absolute',
