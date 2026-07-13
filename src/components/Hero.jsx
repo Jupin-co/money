@@ -105,54 +105,6 @@ const Hero = () => {
             pointerEvents: 'none'
           }} />
 
-          {/* Mystic SVG Snake Glow (True curved slithering line) */}
-          <div style={{
-            position: 'absolute',
-            width: '500px',
-            height: '500px',
-            zIndex: 3, // In front of the sun, behind the coin and shadow
-            pointerEvents: 'none'
-          }}>
-            <motion.svg width="500" height="500" viewBox="0 0 500 500"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            >
-              <defs>
-                <linearGradient id="snakeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#000080" />
-                  <stop offset="30%" stopColor="#1e3a8a" />
-                  <stop offset="60%" stopColor="#ec4899" />
-                  <stop offset="100%" stopColor="#8b5cf6" />
-                </linearGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
-                  <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
-              <motion.path
-                d="M 250 50 C 400 50, 450 200, 400 350 C 350 500, 100 450, 80 300 C 50 150, 100 50, 250 50"
-                fill="none"
-                stroke="url(#snakeGrad)"
-                strokeWidth="12"
-                strokeLinecap="round"
-                filter="url(#glow)"
-                initial={{ pathLength: 0, pathOffset: 0 }}
-                animate={{ 
-                  pathLength: [0.15, 0.3, 0.15], 
-                  pathOffset: [0, 1] 
-                }}
-                transition={{ 
-                  duration: 8, 
-                  repeat: Infinity, 
-                  ease: "linear" 
-                }}
-              />
-            </motion.svg>
-          </div>
-
           {/* Static shadow behind the coin (incredibly fast to render) */}
           <div style={{
             position: 'absolute',
