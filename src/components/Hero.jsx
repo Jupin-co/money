@@ -110,7 +110,7 @@ const Hero = () => {
           }}
           whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
         >
-          {/* Front Face (Lion and Sun) - 3px for a realistically thin coin */}
+          {/* Front Face (Lion and Sun) - 4px for an 8px thick coin */}
           <div style={{
             position: 'absolute',
             width: '100%',
@@ -120,21 +120,21 @@ const Hero = () => {
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
-            transform: 'translateZ(3px)',
+            transform: 'translateZ(4px)',
             filter: isFrontLoaded ? 'none' : 'blur(5px)',
             transition: 'filter 0.3s ease',
             opacity: frontSrc ? 1 : 0
           }} />
 
-          {/* The Coin Edge (5 layers - drastically cuts GPU fill-rate on @3x mobile screens while maintaining a realistic coin thickness) */}
-          {Array.from({ length: 5 }).map((_, i) => (
+          {/* The Coin Edge (8 layers for an 8px thick coin) */}
+          {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} style={{
               position: 'absolute',
               width: '100%',
               height: '100%',
               borderRadius: '50%',
               background: i % 2 === 0 ? '#5a5a5a' : '#3d3d3d', // Darker grey edge
-              transform: `translateZ(${2 - i}px)` // 2, 1, 0, -1, -2
+              transform: `translateZ(${3.5 - i}px)` // 3.5 down to -3.5
             }} />
           ))}
           
@@ -148,7 +148,7 @@ const Hero = () => {
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
-            transform: 'rotateY(180deg) translateZ(3px)',
+            transform: 'rotateY(180deg) translateZ(4px)',
             filter: isBackLoaded ? 'none' : 'blur(5px)',
             transition: 'filter 0.3s ease',
             opacity: backSrc ? 1 : 0
