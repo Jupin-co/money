@@ -6,12 +6,11 @@
       "country": "ایران",
       "value": "100",
       "type": "paper_money",
-      "thumbnailUrl": "https://picsum.photos/150",
-      "lowResUrl": "https://picsum.photos/300",
       "highResUrl": "https://picsum.photos/600",
       "quality": "UNC",
       "year": "1350",
-      "description": "Test"
+      "description": "Test",
+      "imageUrl": "https://picsum.photos/300"
     },
     {
       "id": "2",
@@ -19,12 +18,11 @@
       "country": "ایران",
       "value": "100",
       "type": "paper_money",
-      "thumbnailUrl": "https://picsum.photos/151",
-      "lowResUrl": "https://picsum.photos/301",
       "highResUrl": "https://picsum.photos/601",
       "quality": "AU",
       "year": "1351",
-      "description": "Test"
+      "description": "Test",
+      "imageUrl": "https://picsum.photos/301"
     },
     {
       "id": "3",
@@ -32,12 +30,11 @@
       "country": "ایران",
       "value": "100",
       "type": "paper_money",
-      "thumbnailUrl": "https://picsum.photos/152",
-      "lowResUrl": "https://picsum.photos/302",
       "highResUrl": "https://picsum.photos/602",
       "quality": "XF",
       "year": "1352",
-      "description": "Test"
+      "description": "Test",
+      "imageUrl": "https://picsum.photos/302"
     },
     {
       "id": "4",
@@ -45,12 +42,11 @@
       "country": "ایران",
       "value": "100",
       "type": "paper_money",
-      "thumbnailUrl": "https://picsum.photos/153",
-      "lowResUrl": "https://picsum.photos/303",
       "highResUrl": "https://picsum.photos/603",
       "quality": "VF",
       "year": "1353",
-      "description": "Test"
+      "description": "Test",
+      "imageUrl": "https://picsum.photos/303"
     },
     {
       "id": "5",
@@ -58,12 +54,11 @@
       "country": "ایران",
       "value": "200",
       "type": "paper_money",
-      "thumbnailUrl": "https://picsum.photos/154",
-      "lowResUrl": "https://picsum.photos/304",
       "highResUrl": "https://picsum.photos/604",
       "quality": "UNC",
       "year": "1350",
-      "description": "Test"
+      "description": "Test",
+      "imageUrl": "https://picsum.photos/304"
     }
   ]
 }
