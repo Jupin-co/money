@@ -265,7 +265,6 @@ const ImageCard = ({ item, onClick }) => {
                 drag={isStack && isTop ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
-                dragSnapToOrigin={true}
                 onClick={() => isTop && onClick(item, activeIndex)}
                 onDrag={(e, info) => setDragOffset(info.offset.x)}
                 onDragEnd={(e, { offset }) => {
