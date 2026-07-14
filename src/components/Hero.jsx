@@ -8,8 +8,8 @@ const Hero = () => {
   const { scrollY } = useScroll();
   
   // Progressive loading state removed - browser handles lazy loading of progressive webp/jpeg natively
-  const frontSrc = `${R2_BASE}coin-front_hr.png`;
-  const backSrc = `${R2_BASE}coin-back_hr.png`;
+  const frontSrc = `${R2_BASE}coin-front.webp`;
+  const backSrc = `${R2_BASE}coin-back.webp`;
 
   // Create parallax and rotation effects tied to scroll
   const y = useTransform(scrollY, [0, 500], [0, 150]);
