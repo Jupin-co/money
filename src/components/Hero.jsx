@@ -1,55 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { thumbnailQueue, lowResQueue, highResQueue } from '../utils/imageQueue';
+// No queue needed
 
 const R2_BASE = 'https://pub-4eebccbd3b5c49b4b656b13a58a22a3a.r2.dev/';
 
 const Hero = () => {
   const { scrollY } = useScroll();
   
-  // Progressive loading state
-  const [frontSrc, setFrontSrc] = useState(null);
-  const [backSrc, setBackSrc] = useState(null);
-  const [isFrontLoaded, setIsFrontLoaded] = useState(false);
-  const [isBackLoaded, setIsBackLoaded] = useState(false);
-
-  useEffect(() => {
-    let mounted = true;
-
-    // Load Front
-    thumbnailQueue.add(`${R2_BASE}coin-front_thumb.png`, (thumbSrc) => {
-      if (!mounted) return;
-      setFrontSrc(prev => prev ? prev : thumbSrc);
-      
-      lowResQueue.add(`${R2_BASE}coin-front_lr.png`, (lrSrc) => {
-        if (!mounted) return;
-        setFrontSrc(lrSrc);
-        setIsFrontLoaded(true);
-        
-        highResQueue.add(`${R2_BASE}coin-front_hr.png`, (hrSrc) => {
-          if (mounted) setFrontSrc(hrSrc);
-        });
-      });
-    });
-
-    // Load Back
-    thumbnailQueue.add(`${R2_BASE}coin-back_thumb.png`, (thumbSrc) => {
-      if (!mounted) return;
-      setBackSrc(prev => prev ? prev : thumbSrc);
-      
-      lowResQueue.add(`${R2_BASE}coin-back_lr.png`, (lrSrc) => {
-        if (!mounted) return;
-        setBackSrc(lrSrc);
-        setIsBackLoaded(true);
-        
-        highResQueue.add(`${R2_BASE}coin-back_hr.png`, (hrSrc) => {
-          if (mounted) setBackSrc(hrSrc);
-        });
-      });
-    });
-
-    return () => { mounted = false; };
-  }, []);
+  // Progressive loading state removed - browser handles lazy loading of progressive webp/jpeg natively
+  const frontSrc = `${R2_BASE}coin-front_hr.png`;
+  const backSrc = `${R2_BASE}coin-back_hr.png`;
 
   // Create parallax and rotation effects tied to scroll
   const y = useTransform(scrollY, [0, 500], [0, 150]);
@@ -137,14 +97,11 @@ const Hero = () => {
             width: '100%',
             height: '100%',
             backfaceVisibility: 'hidden',
-            backgroundImage: frontSrc ? `url(${frontSrc})` : 'none',
+            backgroundImage: `url(${frontSrc})`,
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
-            transform: 'translateZ(4px)',
-            filter: isFrontLoaded ? 'none' : 'blur(5px)',
-            transition: 'filter 0.3s ease',
-            opacity: frontSrc ? 1 : 0
+            transform: 'translateZ(4px)'
           }} />
 
           {/* The Coin Edge (8 layers for an 8px thick coin) */}
@@ -165,14 +122,11 @@ const Hero = () => {
             width: '100%',
             height: '100%',
             backfaceVisibility: 'hidden',
-            backgroundImage: backSrc ? `url(${backSrc})` : 'none',
+            backgroundImage: `url(${backSrc})`,
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
-            transform: 'rotateY(180deg) translateZ(4px)',
-            filter: isBackLoaded ? 'none' : 'blur(5px)',
-            transition: 'filter 0.3s ease',
-            opacity: backSrc ? 1 : 0
+            transform: 'rotateY(180deg) translateZ(4px)'
           }} />
         </motion.div>
         </div>
