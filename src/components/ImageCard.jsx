@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { thumbnailQueue, lowResQueue } from '../utils/imageQueue';
 
 // Extracted inner card component to render twice (Top and Bottom)
@@ -110,6 +110,11 @@ const ImageCard = ({ item, onClick }) => {
 
   const [[page, direction], setPage] = useState([0, 0]);
   const [dragOffset, setDragOffset] = useState(0);
+
+  const paginate = (newDirection) => {
+    setPage([page + newDirection, newDirection]);
+    setDragOffset(0);
+  };
 
   const len = variants.length;
   // Proper array wrapping for negative numbers
@@ -244,16 +249,15 @@ const ImageCard = ({ item, onClick }) => {
                 custom={direction}
                 initial={
                   direction > 0
-                    ? { scale: 0.9, y: 40, opacity: 0, x: 0 }
-                    : { scale: 1, y: 0, opacity: 0, x: -300 }
+                    ? { scale: 0.9, y: 40, opacity: 0 }
+                    : { scale: 1, y: 0, opacity: 0 }
                 }
                 animate={{
                   scale: depth === 0 ? 1 : depth === 1 ? 0.97 : 0.94,
                   y: depth === 0 ? 0 : depth === 1 ? 15 : 30,
                   rotate: depth === 0 ? 0 : depth === 1 ? -1 : 1,
                   opacity: 1,
-                  zIndex: 10 - depth,
-                  x: 0
+                  zIndex: 10 - depth
                 }}
                 exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                 transition={{ 
@@ -266,7 +270,6 @@ const ImageCard = ({ item, onClick }) => {
                   pointerEvents: isTop ? 'auto' : 'none'
                 }}
                 drag={isStack ? "x" : false}
-                dragListener={isTop}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
                 onClick={() => isTop && onClick(item, activeIndex)}
