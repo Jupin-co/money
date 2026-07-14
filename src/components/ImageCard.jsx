@@ -251,21 +251,22 @@ const ImageCard = ({ item, onClick }) => {
                   scale: depth === 0 ? 1 : depth === 1 ? 0.97 : 0.94,
                   y: depth === 0 ? 0 : depth === 1 ? 15 : 30,
                   rotate: depth === 0 ? 0 : depth === 1 ? -1 : 1,
-                  opacity: 1
+                  opacity: 1,
+                  zIndex: 10 - depth,
+                  x: 0
                 }}
-                exit={
-                  direction > 0
-                    ? { scale: 1, y: 0, opacity: 0, x: -300 }
-                    : { scale: 0.9, y: 40, opacity: 0, x: 0 } // Or we can use the actual offset if we saved it!
-                }
-                transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, duration: 0.3 }}
+                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                transition={{ 
+                  type: 'spring', stiffness: 300, damping: 30,
+                  zIndex: { delay: depth === 0 ? 0 : 0.15 } 
+                }}
                 style={{
                   position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                  zIndex: 10 - depth,
                   cursor: isStack && isTop ? 'grab' : (isTop ? 'pointer' : 'default'),
                   pointerEvents: isTop ? 'auto' : 'none'
                 }}
-                drag={isStack && isTop ? "x" : false}
+                drag={isStack ? "x" : false}
+                dragListener={isTop}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
                 onClick={() => isTop && onClick(item, activeIndex)}
