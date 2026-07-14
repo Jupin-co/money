@@ -121,21 +121,69 @@ const ImageCard = ({ item, onClick }) => {
   const bottomIndex = (((page + bottomOffset) % len) + len) % len;
   const bottomVariant = variants[bottomIndex];
 
-  const paginate = (newDirection) => {
-    if (!isStack) return;
-    setPage([page + newDirection, newDirection]);
-    setDragOffset(0);
-  };
+  const renderPagination = () => {
+    if (!isStack || len <= 1) return null;
 
-  const variantsAnimation = {
-    enter: { scale: 0.95, opacity: 1, x: 0 },
-    center: { scale: 1, opacity: 1, x: 0 },
-    exit: (direction) => ({
-      x: direction < 0 ? 300 : -300,
-      opacity: 0,
-      scale: 1,
-      transition: { duration: 0.3 }
-    })
+    let windowStart = 0;
+    let windowEnd = len - 1;
+    const maxVisible = 7;
+
+    if (len > maxVisible) {
+      if (activeIndex <= 3) {
+        windowStart = 0;
+        windowEnd = 6;
+      } else if (activeIndex >= len - 4) {
+        windowStart = len - maxVisible;
+        windowEnd = len - 1;
+      } else {
+        windowStart = activeIndex - 3;
+        windowEnd = activeIndex + 3;
+      }
+    }
+
+    const dots = [];
+    for (let idx = windowStart; idx <= windowEnd; idx++) {
+      let scale = 1;
+      let opacity = activeIndex === idx ? 0.9 : 0.3;
+
+      if (len > maxVisible) {
+        if (idx === windowStart && windowStart > 0) {
+          scale = 0.5;
+          opacity = 0.2;
+        } else if (idx === windowStart + 1 && windowStart > 0) {
+          scale = 0.8;
+          opacity = 0.25;
+        }
+
+        if (idx === windowEnd && windowEnd < len - 1) {
+          scale = 0.5;
+          opacity = 0.2;
+        } else if (idx === windowEnd - 1 && windowEnd < len - 1) {
+          scale = 0.8;
+          opacity = 0.25;
+        }
+      }
+
+      dots.push(
+        <div
+          key={idx}
+          style={{
+            width: '6px', height: '6px', borderRadius: '50%',
+            background: 'rgba(255,255,255,1)',
+            opacity: opacity,
+            transform: `scale(${scale})`,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+            transition: 'all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)'
+          }}
+        />
+      );
+    }
+
+    return (
+      <div style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', gap: '4px', zIndex: 20, alignItems: 'center', height: '6px' }}>
+        {dots}
+      </div>
+    );
   };
 
   return (
@@ -146,19 +194,9 @@ const ImageCard = ({ item, onClick }) => {
         cursor: isStack ? 'grab' : 'pointer',
       }}
     >
-      {/* Visual Stack Effect Layers - dynamically generated based on card count */}
+      {/* Visual Stack Effect Layers - permanently behind everything */}
       {isStack && (
         <>
-          {/* Card #3 (Behind Bottom Card) */}
-          {variants.length >= 3 && (
-            <div style={{
-              position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: '#EAE5D9', borderTop: '1px solid rgba(255,255,255,0.5)',
-              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -1,
-              transform: 'scale(0.94) rotate(1deg) translateY(30px)', borderRadius: '12px'
-            }} />
-          )}
-          {/* Card #4 */}
           {variants.length >= 4 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
@@ -167,7 +205,6 @@ const ImageCard = ({ item, onClick }) => {
               transform: 'scale(0.91) rotate(-1.5deg) translateY(45px)', borderRadius: '12px'
             }} />
           )}
-          {/* Card #5+ */}
           {variants.length >= 5 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
@@ -179,64 +216,69 @@ const ImageCard = ({ item, onClick }) => {
         </>
       )}
 
-      {/* Container maintains exact height dictated by the static bottom card */}
-      <div style={{ position: 'relative' }}>
+      {/* Invisible static card to maintain exact container height */}
+      <div style={{ opacity: 0, pointerEvents: 'none', visibility: 'hidden' }}>
+        <CardContent variant={variants[0]} isStack={isStack} totalVariants={variants.length} />
+      </div>
 
-        {/* BOTTOM CARD: Static, always rendered, provides height and acts as pre-loader. Also acts visually as Card #2 in the stack! */}
-        {/* Increased translate to 15px and scale to 0.97 so it pokes out definitively */}
-        <div style={{ opacity: isStack ? 1 : 0, transform: isStack ? 'scale(0.97) rotate(-1deg) translateY(15px)' : 'scale(0.97)', transition: 'transform 0.3s' }}>
-          <CardContent variant={bottomVariant} isStack={isStack} totalVariants={variants.length} />
-        </div>
-
-        {/* TOP CARD: Draggable, flies off when swiped */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+        {renderPagination()}
         <AnimatePresence initial={false} custom={direction}>
-          <motion.div
-            key={page}
-            custom={direction}
-            variants={variantsAnimation}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, scale: { duration: 0.2 } }}
-            drag={isStack ? "x" : false}
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
-            onClick={() => onClick(item, activeIndex)}
-            onDrag={(e, info) => setDragOffset(info.offset.x)}
-            onDragEnd={(e, { offset }) => {
-              // Strict distance threshold for flawless desktop and mobile swiping
-              if (offset.x < -50) {
-                paginate(1);
-              } else if (offset.x > 50) {
-                paginate(-1);
-              } else {
-                setDragOffset(0);
-              }
-            }}
-            style={{
-              position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-              cursor: isStack ? 'grab' : 'pointer',
-              zIndex: 10
-            }}
-            whileDrag={{ cursor: "grabbing" }}
-          >
-            {isStack && (
-              <div style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', gap: '4px', zIndex: 20 }}>
-                {variants.map((_, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      width: '6px', height: '6px', borderRadius: '50%',
-                      background: activeIndex === idx ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                      transition: 'all 0.3s'
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-            <CardContent variant={currentVariant} isStack={isStack} totalVariants={variants.length} />
-          </motion.div>
+          {variants.map((variant, idx) => {
+            let depth = -1;
+            if (idx === activeIndex) depth = 0;
+            else if (idx === (activeIndex + 1) % len) depth = 1;
+            else if (idx === (activeIndex + 2) % len) depth = 2;
+
+            if (!isStack) depth = 0;
+            if (depth === -1) return null; // Only render top 3 active cards!
+
+            const isTop = depth === 0;
+
+            return (
+              <motion.div
+                key={idx}
+                custom={direction}
+                initial={
+                  direction > 0
+                    ? { scale: 0.9, y: 40, opacity: 0, x: 0 }
+                    : { scale: 1, y: 0, opacity: 0, x: -300 }
+                }
+                animate={{
+                  scale: depth === 0 ? 1 : depth === 1 ? 0.97 : 0.94,
+                  y: depth === 0 ? 0 : depth === 1 ? 15 : 30,
+                  rotate: depth === 0 ? 0 : depth === 1 ? -1 : 1,
+                  opacity: 1,
+                  x: 0
+                }}
+                exit={
+                  direction > 0
+                    ? { scale: 1, y: 0, opacity: 0, x: -300 }
+                    : { scale: 0.9, y: 40, opacity: 0, x: 0 }
+                }
+                transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, duration: 0.3 }}
+                style={{
+                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                  zIndex: 10 - depth,
+                  cursor: isStack && isTop ? 'grab' : (isTop ? 'pointer' : 'default'),
+                  pointerEvents: isTop ? 'auto' : 'none'
+                }}
+                drag={isStack && isTop ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={1}
+                onClick={() => isTop && onClick(item, activeIndex)}
+                onDrag={(e, info) => setDragOffset(info.offset.x)}
+                onDragEnd={(e, { offset }) => {
+                  if (offset.x < -50) paginate(1);
+                  else if (offset.x > 50) paginate(-1);
+                  else setDragOffset(0);
+                }}
+                whileDrag={isTop ? { cursor: "grabbing" } : {}}
+              >
+                <CardContent variant={variant} isStack={isStack} totalVariants={variants.length} />
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
       </div>
     </motion.div>
