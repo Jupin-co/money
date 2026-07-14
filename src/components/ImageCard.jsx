@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
-import { thumbnailQueue, lowResQueue } from '../utils/imageQueue';
+// No queue needed
 
 // Extracted inner card component to render twice (Top and Bottom)
 const currencyDict = {
@@ -23,25 +23,6 @@ const currencyDict = {
 };
 
 const CardContent = ({ variant, isStack, totalVariants }) => {
-  const [currentSrc, setCurrentSrc] = useState(null);
-  const [isLowResLoaded, setIsLowResLoaded] = useState(false);
-
-  useEffect(() => {
-    let mounted = true;
-    setIsLowResLoaded(false);
-
-    thumbnailQueue.add(variant.thumbnailUrl, (src) => {
-      if (mounted && !isLowResLoaded) {
-        setCurrentSrc(src);
-        lowResQueue.add(variant.lowResUrl, (lowResSrc) => {
-          if (mounted) { setCurrentSrc(lowResSrc); setIsLowResLoaded(true); }
-        });
-      }
-    });
-
-    return () => { mounted = false; };
-  }, [variant]);
-
   return (
     <div style={{
       width: '100%', height: '100%',
@@ -58,17 +39,17 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
       boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
     }}>
       <div style={{ position: 'relative', width: '100%', paddingTop: '100%' }}>
-        {currentSrc && (
-          <motion.img
-            src={currentSrc}
-            alt={variant.title}
-            animate={{ filter: isLowResLoaded ? 'drop-shadow(0 10px 15px rgba(0,0,0,0.5)) blur(0px)' : 'blur(5px)', opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{ position: 'absolute', top: '5%', left: '5%', width: '90%', height: '90%', objectFit: 'contain', pointerEvents: 'none' }}
-            draggable="false"
-          />
-        )}
+        <motion.img
+          src={variant.imageUrl}
+          alt={variant.title}
+          loading="lazy"
+          decoding="async"
+          animate={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.5))', opacity: 1 }}
+          initial={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          style={{ position: 'absolute', top: '5%', left: '5%', width: '90%', height: '90%', objectFit: 'contain', pointerEvents: 'none' }}
+          draggable="false"
+        />
       </div>
       <div style={{
         padding: '0.5rem 0.75rem 1rem 0.75rem', background: '#FDFBF7',
@@ -266,8 +247,7 @@ const ImageCard = ({ item, onClick }) => {
                 }}
                 style={{
                   position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                  cursor: isStack && isTop ? 'grab' : (isTop ? 'pointer' : 'default'),
-                  pointerEvents: isTop ? 'auto' : 'none'
+                  cursor: isStack && isTop ? 'grab' : (isTop ? 'pointer' : 'default')
                 }}
                 drag={isStack ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
