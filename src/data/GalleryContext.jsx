@@ -16,7 +16,7 @@ export const GalleryProvider = ({ children }) => {
         let response = await fetch('/api/catalog');
         if (!response.ok) {
           // Fallback to static catalog.json if running in standalone Vite dev server
-          response = await fetch('/catalog.json');
+          response = await fetch('/data/catalog.json');
         }
         if (!response.ok) throw new Error('Failed to fetch catalog');
         const data = await response.json();

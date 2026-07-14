@@ -224,15 +224,18 @@ const ImageCard = ({ item, onClick }) => {
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
         {renderPagination()}
         <AnimatePresence initial={false} custom={direction}>
-          {variants.map((variant, idx) => {
-            let depth = -1;
-            if (idx === activeIndex) depth = 0;
-            else if (idx === (activeIndex + 1) % len) depth = 1;
-            else if (idx === (activeIndex + 2) % len) depth = 2;
+          {variants
+            .map((variant, idx) => {
+              let depth = -1;
+              if (idx === activeIndex) depth = 0;
+              else if (idx === (activeIndex + 1) % len) depth = 1;
+              else if (idx === (activeIndex + 2) % len) depth = 2;
 
-            if (!isStack) depth = 0;
-            if (depth === -1) return null; // Only render top 3 active cards!
-
+              if (!isStack) depth = 0;
+              return { variant, idx, depth };
+            })
+            .filter(item => item.depth !== -1)
+            .map(({ variant, idx, depth }) => {
             const isTop = depth === 0;
 
             return (
