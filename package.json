@@ -9,16 +9,21 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1085.0",
     "@vitejs/plugin-react": "^6.0.3",
+    "dotenv": "^17.4.2",
+    "playwright": "^1.61.1",
     "typescript": "~6.0.2",
     "vite": "^8.1.1"
   },
   "dependencies": {
+    "@fontsource/noto-nastaliq-urdu": "^5.2.8",
     "framer-motion": "^12.42.2",
     "phosphor-react": "^1.4.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
-    "react-zoom-pan-pinch": "^4.0.3"
+    "react-zoom-pan-pinch": "^4.0.3",
+    "sharp": "^0.35.3"
   }
 }

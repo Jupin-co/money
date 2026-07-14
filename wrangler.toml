@@ -1,0 +1,15 @@
+name = "money"
+compatibility_date = "2026-07-12"
+main = "./worker.js"
+
+[assets]
+directory = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gallery-db"
+database_id = "25c992ff-d2a9-414a-a4ce-c2de5ca1267e"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "gallery-images"

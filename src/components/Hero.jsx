@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+// No queue needed
+
+const R2_BASE = 'https://pub-4eebccbd3b5c49b4b656b13a58a22a3a.r2.dev/';
 
 const Hero = () => {
   const { scrollY } = useScroll();
   
+  // Progressive loading state removed - browser handles lazy loading of progressive webp/jpeg natively
+  const frontSrc = `${R2_BASE}coin-front_hr.png`;
+  const backSrc = `${R2_BASE}coin-back_hr.png`;
+
   // Create parallax and rotation effects tied to scroll
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   
   // Rotate the coin from 0 to 180 degrees (Front to Back)
-  // Spin is slightly faster now (completes in 400px of scrolling)
   const rotateY = useTransform(scrollY, [0, 400], [0, 180], { clamp: true });
   const scale = useTransform(scrollY, [0, 400], [1, 1.2], { clamp: true });
+
+  // Ambient light "Sun" parallax effect (Right to Left arc)
+  const lightX = useTransform(scrollY, [0, 600], ['300px', '-300px'], { clamp: true });
+  const lightY = useTransform(scrollY, [0, 300, 600], ['100px', '-50px', '100px'], { clamp: true });
 
   return (
     <div style={{
@@ -38,55 +48,88 @@ const Hero = () => {
           </p>
         </motion.div>
         
-        {/* The 3D Gamified Coin */}
-        <motion.div
-          style={{
-            rotateY,
-            scale,
+        {/* Visual elements container - positions everything relative to the exact center of the coin */}
+        <div style={{ position: 'relative', width: '250px', height: '250px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          
+          {/* Ambient Sunset Light behind the coin */}
+          <motion.div style={{
+            position: 'absolute',
+            width: '500px',
+            height: '500px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(255, 180, 70, 0.3) 0%, rgba(200, 100, 20, 0.1) 50%, rgba(0,0,0,0) 80%)',
+            filter: 'blur(80px)',
+            x: lightX,
+            y: lightY,
+            zIndex: 2, // Behind the coin and shadow
+            pointerEvents: 'none'
+          }} />
+
+          {/* Static shadow behind the coin (incredibly fast to render) */}
+          <div style={{
+            position: 'absolute',
             width: '250px',
             height: '250px',
-            position: 'relative',
-            transformStyle: 'preserve-3d',
-            perspective: '1000px',
-            cursor: 'pointer'
-          }}
-          whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
-        >
-          {/* Front Face (Lion and Sun) - Pushed out to 10.5px to sit on top of edge layers */}
+            borderRadius: '50%',
+            boxShadow: '0 30px 60px rgba(0,0,0,0.4)',
+            zIndex: 5,
+            pointerEvents: 'none'
+          }} />
+
+          {/* The 3D Gamified Coin */}
+          <motion.div
+            style={{
+              rotateY,
+              scale,
+              width: '250px',
+              height: '250px',
+              position: 'relative',
+              transformStyle: 'preserve-3d',
+              perspective: '1000px',
+              cursor: 'pointer',
+              zIndex: 10
+            }}
+            whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
+          >
+          {/* Front Face (Lion and Sun) - 4px for an 8px thick coin */}
           <div style={{
             position: 'absolute',
             width: '100%',
             height: '100%',
             backfaceVisibility: 'hidden',
-            background: 'url(./images/coin-front.png) center/contain no-repeat',
-            transform: 'translateZ(10.5px)',
-            filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.2))'
+            backgroundImage: `url(${frontSrc})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            transform: 'translateZ(4px)'
           }} />
 
-          {/* The Coin Edge (Ultra-dense layers for 90-degree visibility) */}
-          {Array.from({ length: 40 }).map((_, i) => (
+          {/* The Coin Edge (8 layers for an 8px thick coin) */}
+          {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} style={{
               position: 'absolute',
               width: '100%',
               height: '100%',
               borderRadius: '50%',
-              background: i % 2 === 0 ? '#b0b0b0' : '#8a8a8a', // Creates a ridged edge texture
-              transform: `translateZ(${(20 - i) * 0.5}px)`,
-              boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)'
+              background: i % 2 === 0 ? '#5a5a5a' : '#3d3d3d', // Darker grey edge
+              transform: `translateZ(${3.5 - i}px)` // 3.5 down to -3.5
             }} />
           ))}
           
-          {/* Back Face (Ahmad Shah Qajar) - Pushed out to 10.5px */}
+          {/* Back Face (Ahmad Shah Qajar) */}
           <div style={{
             position: 'absolute',
             width: '100%',
             height: '100%',
             backfaceVisibility: 'hidden',
-            background: 'url(./images/coin-back.png) center/contain no-repeat',
-            transform: 'rotateY(180deg) translateZ(10.5px)',
-            filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.2))'
+            backgroundImage: `url(${backSrc})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            transform: 'rotateY(180deg) translateZ(4px)'
           }} />
         </motion.div>
+        </div>
         
         <motion.div 
           style={{ marginTop: '4rem', color: 'var(--muted-foreground)', fontFamily: 'var(--font-sans)', letterSpacing: '0.1em' }}

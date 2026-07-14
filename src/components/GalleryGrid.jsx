@@ -10,25 +10,28 @@ const filterLabels = {
   'stamp': 'تمبر'
 };
 
-const BATCH_SIZE = 12;
+const BATCH_SIZE = 50;
 
-// Group items into "Stacks" if they are visually identical variants
 const groupItems = (items) => {
   const groups = {};
   items.forEach(item => {
-    const key = `${item.type}-${item.country}-${item.year}-${item.title}`;
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(item);
+    const key = `${item.country}_${item.value}`;
+    if (!groups[key]) {
+      groups[key] = {
+        id: key,
+        ...item,
+        isStack: true,
+        variants: [item]
+      };
+    } else {
+      groups[key].variants.push(item);
+    }
   });
-  
   return Object.values(groups).map(group => {
-    if (group.length === 1) return group[0];
-    return {
-      isStack: true,
-      id: group[0].id + '_stack',
-      type: group[0].type,
-      variants: group
-    };
+    if (group.variants.length === 1) {
+      return group.variants[0];
+    }
+    return group;
   });
 };
 
@@ -38,10 +41,26 @@ const GalleryGrid = ({ onSelect }) => {
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const observerTarget = useRef(null);
 
-  // Filter and group items
+  // Filter, group, and sort items
   const processedItems = useMemo(() => {
     const filtered = filter === 'all' ? items : items.filter(item => item.type === filter);
-    return groupItems(filtered);
+    
+    // Group items by country and value
+    const grouped = groupItems(filtered);
+
+    // Sort alphabetically by country, then value (converted to number for proper sorting)
+    return grouped.sort((a, b) => {
+      if (a.country !== b.country) {
+        return a.country.localeCompare(b.country, 'fa');
+      }
+      // Sort numerically by value if possible, otherwise string sort
+      const numA = parseFloat(a.value);
+      const numB = parseFloat(b.value);
+      if (!isNaN(numA) && !isNaN(numB)) {
+        return numA - numB;
+      }
+      return a.value.toString().localeCompare(b.value.toString(), 'fa');
+    });
   }, [items, filter]);
 
   // Reset visible count when filter changes

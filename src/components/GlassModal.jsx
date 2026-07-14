@@ -18,32 +18,9 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
   const activeIndex = Math.abs(page % variants.length);
   const item = initialItem ? variants[activeIndex] : null;
 
-  const [currentSrc, setCurrentSrc] = useState(null);
-  const [isHighResLoaded, setIsHighResLoaded] = useState(false);
-  const [hasBounced, setHasBounced] = useState(false);
-
-  // Reset page when a new item is opened
-  useEffect(() => {
-    if (initialItem) {
-      setPage([initialIndex, 0]);
-      setHasBounced(false);
-      const timer = setTimeout(() => setHasBounced(true), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [initialItem?.id, initialIndex]);
-
   useEffect(() => {
     if (item) {
       document.body.style.overflow = 'hidden';
-      setCurrentSrc(item.lowResUrl);
-      setIsHighResLoaded(false);
-
-      const img = new Image();
-      img.src = item.highResUrl;
-      img.onload = () => {
-        setCurrentSrc(item.highResUrl);
-        setIsHighResLoaded(true);
-      };
     } else {
       document.body.style.overflow = 'auto';
     }
@@ -98,7 +75,9 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
               position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
               background: 'rgba(10, 10, 10, 0.65)',
               backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-              zIndex: 100, cursor: 'zoom-out'
+              zIndex: 100, cursor: 'zoom-out',
+              touchAction: 'none', // Prevents iOS Safari from capturing scroll gestures
+              overscrollBehavior: 'none' // Prevents scroll chaining on modern browsers
             }}
           />
           
@@ -153,10 +132,11 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
                     maxScale={5}
                     centerOnInit={true}
                     wheel={{ step: 0.1 }}
-                    panning={{ disabled: true }}
                     doubleClick={{ disabled: true }}
-                    onPinchingStop={(ref) => ref.resetTransform()}
-                    onWheelStop={(ref) => ref.resetTransform()}
+                    pinch={{ step: 5 }}
+                    panning={{ disabled: false }}
+                    onPinchingStop={(ref) => ref.resetTransform(300, "easeOut")}
+                    onPanningStop={(ref) => ref.resetTransform(300, "easeOut")}
                   >
                     {({ state, resetTransform }) => (
                       <AnimatePresence initial={false} custom={direction}>
@@ -193,7 +173,7 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
                           whileDrag={{ cursor: "grabbing", scale: state.scale === 1 ? 0.95 : 1 }}
                         >
                           <motion.div
-                            animate={isStack && state.scale === 1 && !hasBounced ? {
+                            animate={isStack && state.scale === 1 ? {
                               y: [0, -20, 0],
                               transition: { delay: 0.6, duration: 1.5, ease: "easeInOut" }
                             } : {}}
@@ -204,13 +184,13 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
                               contentStyle={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                             >
                               <motion.img
-                                initial={{ filter: 'blur(2px)' }}
-                                animate={{ filter: isHighResLoaded ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.3)) blur(0px)' : 'drop-shadow(0 20px 40px rgba(0,0,0,0.3)) blur(2px)' }}
-                                src={currentSrc}
+                                loading="lazy"
+                                decoding="async"
+                                animate={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))' }}
+                                src={item.imageUrl}
                                 alt={item.title}
                                 style={{ 
                                   width: '100%', height: '100%', objectFit: 'contain', 
-                                  padding: '1.5rem', // Margin from edges
                                   pointerEvents: 'auto',
                                   userSelect: 'none', WebkitUserSelect: 'none'
                                 }}
