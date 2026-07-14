@@ -24,9 +24,7 @@ function run() {
     '  serialNumber TEXT,',
     '  title TEXT NOT NULL,',
     '  description TEXT NOT NULL,',
-    '  thumbnailUrl TEXT NOT NULL,',
-    '  lowResUrl TEXT NOT NULL,',
-    '  highResUrl TEXT NOT NULL',
+    '  imageUrl TEXT NOT NULL',
     ');',
     '',
   ];
@@ -53,14 +51,14 @@ function run() {
 
   const files = fs.readdirSync(imagesDir);
 
-  // Process only the _hr.png files as the primary source of truth for items
+  // Process .webp files instead of _hr.png
   for (const file of files) {
-    if (!file.endsWith('_hr.png')) continue;
-    if (file === 'coin-back_hr.png' || file === 'coin-front_hr.png') continue;
+    if (!file.endsWith('.webp')) continue;
+    const id = file.replace('.webp', '');
 
-    // e.g. af_4559588_2_vf_hr.png -> af_4559588_2_vf
-    const id = file.replace('_hr.png', '');
-    
+    // Create the single R2 URL
+    const imageUrl = `${r2BaseUrl}/${id}.webp`;
+
     // Split by underscore: [country, serial, value, quality]
     const parts = id.split('_');
     if (parts.length < 4) {
@@ -73,11 +71,6 @@ function run() {
     const valueRaw = parts[2];
     const quality = parts[3];
 
-    // Create R2 URLs for the 3 resolutions
-    const hrUrl = `${r2BaseUrl}/${id}_hr.png`;
-    const lrUrl = `${r2BaseUrl}/${id}_lr.png`;
-    const thumbUrl = `${r2BaseUrl}/${id}_thumb.png`;
-    
     // Default / Map fields
     const type = 'paper_money';
     const year = 'Unknown';
@@ -92,7 +85,7 @@ function run() {
     // Escape strings for SQL
     const esc = (str) => str === null || str === undefined || str === '' ? 'NULL' : `'${str.replace(/'/g, "''")}'`;
 
-    sqlStatements.push(`INSERT INTO items (id, type, country, value, year, quality, serialNumber, title, description, thumbnailUrl, lowResUrl, highResUrl) VALUES (${esc(id)}, ${esc(type)}, ${esc(country)}, ${esc(value)}, ${esc(year)}, ${esc(quality.toUpperCase())}, ${esc(serial)}, ${esc(title)}, ${esc(description)}, ${esc(thumbUrl)}, ${esc(lrUrl)}, ${esc(hrUrl)});`);
+    sqlStatements.push(`INSERT INTO items (id, type, country, value, year, quality, serialNumber, title, description, imageUrl) VALUES (${esc(id)}, ${esc(type)}, ${esc(country)}, ${esc(value)}, ${esc(year)}, ${esc(quality.toUpperCase())}, ${esc(serial)}, ${esc(title)}, ${esc(description)}, ${esc(imageUrl)});`);
   }
 
   fs.writeFileSync(seedFile, sqlStatements.join('\n'));
