@@ -33,7 +33,7 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
     }}>
       <div style={{ position: 'relative', width: '100%', paddingTop: '100%' }}>
         <motion.img
@@ -145,10 +145,9 @@ const ImageCard = ({ item, onClick }) => {
           key={idx}
           style={{
             width: '6px', height: '6px', borderRadius: '50%',
-            background: 'rgba(255,255,255,1)',
+            background: '#1c3b72',
             opacity: opacity,
             transform: `scale(${scale})`,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
             transition: 'all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)'
           }}
         />
@@ -176,16 +175,16 @@ const ImageCard = ({ item, onClick }) => {
           {variants.length >= 4 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: '#DCD6C8', borderTop: '1px solid rgba(255,255,255,0.4)',
-              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -2,
+              background: 'rgba(0, 0, 0, 0.02)', borderTop: '1px solid rgba(0,0,0,0.05)',
+              boxShadow: '0 10px 20px rgba(0,0,0,0.1)', zIndex: -2,
               transform: 'scale(0.91) rotate(-1.5deg) translateY(45px)', borderRadius: '12px'
             }} />
           )}
           {variants.length >= 5 && (
             <div style={{
               position: 'absolute', top: '0', left: '0', right: '0', bottom: '0',
-              background: '#D0C8B6', borderTop: '1px solid rgba(255,255,255,0.3)',
-              boxShadow: '0 10px 20px rgba(0,0,0,0.5)', zIndex: -3,
+              background: 'rgba(0, 0, 0, 0.04)', borderTop: '1px solid rgba(0,0,0,0.05)',
+              boxShadow: '0 10px 20px rgba(0,0,0,0.1)', zIndex: -3,
               transform: 'scale(0.88) rotate(2deg) translateY(60px)', borderRadius: '12px'
             }} />
           )}
