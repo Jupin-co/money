@@ -20,8 +20,8 @@ const Hero = () => {
   const scale = useTransform(scrollY, [0, 400], [1, 1.2], { clamp: true });
 
   // Ambient light "Sun" parallax effect (Right to Left arc)
-  const lightX = useTransform(scrollY, [0, 600], ['300px', '-300px'], { clamp: true });
-  const lightY = useTransform(scrollY, [0, 300, 600], ['100px', '-50px', '100px'], { clamp: true });
+  const lightX = useTransform(scrollY, [0, 600], ['25vw', '-25vw'], { clamp: true });
+  const lightY = useTransform(scrollY, [0, 300, 600], ['10vw', '-5vw', '10vw'], { clamp: true });
 
   return (
     <div style={{
@@ -54,25 +54,16 @@ const Hero = () => {
           {/* Ambient Sunset Light behind the coin */}
           <motion.div style={{
             position: 'absolute',
-            width: '500px',
-            height: '500px',
+            width: '150vw', // Responsive size
+            height: '150vw',
+            maxWidth: '1000px', // Don't let it get too huge on desktop
+            maxHeight: '1000px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(255, 180, 70, 0.4) 0%, rgba(200, 100, 20, 0.15) 50%, rgba(255, 255, 255, 0) 80%)',
-            filter: 'blur(80px)',
+            background: 'radial-gradient(circle, rgba(255, 180, 70, 0.4) 0%, rgba(200, 100, 20, 0.15) 40%, rgba(255, 255, 255, 0) 70%)',
+            filter: 'blur(60px)',
             x: lightX,
             y: lightY,
             zIndex: 2, // Behind the coin and shadow
-            pointerEvents: 'none'
-          }} />
-
-          {/* Static shadow behind the coin (incredibly fast to render) */}
-          <div style={{
-            position: 'absolute',
-            width: '250px',
-            height: '250px',
-            borderRadius: '50%',
-            boxShadow: '0 30px 60px rgba(0,0,0,0.4)',
-            zIndex: 5,
             pointerEvents: 'none'
           }} />
 
