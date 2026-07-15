@@ -40,10 +40,10 @@ const Hero = () => {
         zIndex: 10
       }}>
         <motion.div style={{ opacity, zIndex: 10, textAlign: 'center', marginBottom: '4rem' }}>
-          <h1 style={{ margin: 0, fontFamily: 'var(--font-sans)', fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: 600, letterSpacing: '-0.02em' }}>
+          <h1 style={{ margin: 0, fontFamily: 'var(--font-sans)', fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--foreground)' }}>
             کلکسیون تاریخ
           </h1>
-          <p style={{ color: 'var(--muted-foreground)', fontSize: '1.25rem', marginTop: '1rem', fontFamily: 'var(--font-sans)' }}>
+          <p style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: '1.25rem', marginTop: '1rem', fontFamily: 'var(--font-sans)' }}>
             مجموعه‌ای بی‌نظیر از سکه، تمبر و اسکناس‌های کمیاب.
           </p>
         </motion.div>
@@ -57,7 +57,7 @@ const Hero = () => {
             width: '500px',
             height: '500px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(255, 180, 70, 0.3) 0%, rgba(200, 100, 20, 0.1) 50%, rgba(0,0,0,0) 80%)',
+            background: 'radial-gradient(circle, rgba(255, 180, 70, 0.4) 0%, rgba(200, 100, 20, 0.15) 50%, rgba(255, 255, 255, 0) 80%)',
             filter: 'blur(80px)',
             x: lightX,
             y: lightY,
@@ -132,8 +132,8 @@ const Hero = () => {
         </div>
         
         <motion.div 
-          style={{ marginTop: '4rem', color: 'var(--muted-foreground)', fontFamily: 'var(--font-sans)', letterSpacing: '0.1em' }}
-          animate={{ opacity: [0.5, 1, 0.5] }}
+          style={{ marginTop: '4rem', color: 'var(--foreground)', fontFamily: 'var(--font-sans)', letterSpacing: '0.1em' }}
+          animate={{ opacity: [0.4, 0.8, 0.4] }}
           transition={{ repeat: Infinity, duration: 3 }}
         >
           تاریخ را ورق بزنید

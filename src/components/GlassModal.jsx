@@ -73,7 +73,7 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
             onClick={onClose}
             style={{
               position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-              background: 'rgba(10, 10, 10, 0.65)',
+              background: 'rgba(244, 240, 230, 0.65)',
               backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               zIndex: 100, cursor: 'zoom-out',
               touchAction: 'none', // Prevents iOS Safari from capturing scroll gestures

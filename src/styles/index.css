@@ -2,8 +2,8 @@
 @import './components.css';
 
 :root {
-  --background: #110e0c;
-  --foreground: #EAE5D9;
+  --background: #F4F0E6;
+  --foreground: #1c3b72;
   
   --muted: rgba(255, 255, 255, 0.05);
   --muted-foreground: #9B8563;
