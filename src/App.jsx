@@ -13,7 +13,7 @@ function App() {
       <div className="app-container">
         <Hero />
         
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: 'var(--space-8) 0' }}>
+        <div className="grid-container" style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
