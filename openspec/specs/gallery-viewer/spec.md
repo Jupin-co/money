@@ -54,3 +54,20 @@ The system SHALL use progressive image rendering for gallery items to provide in
     - Next-Next Card (Index 2): z-index 8, scale 0.94, translateY 30px
 3. **Swipe Animation (Next):** When swiping to the next card, the Top Card flies off-screen, the Next Card smoothly animates to the Top Card's previous position, and the Next-Next Card animates to the Next Card's position. A new card fades in at the Next-Next position.
 4. **Zero Blinking:** Because cards are fully rendered DOM nodes before they reach the top position, their images will already be loaded via `imageQueue`, completely eliminating the blinking/blurring effect currently seen.
+
+### Performant Mobile Dragging
+The system SHALL handle image card drag gestures without forcing layout re-renders on every pixel moved.
+
+#### Scenario: Dragging a card
+- **WHEN** the user drags a card on a mobile device
+- **THEN** the Framer Motion physics engine manages the drag offset
+- **AND** React state updates for the drag offset are bypassed, eliminating drag-induced stuttering
+
+### Glassy Card Placards
+The system SHALL style the card's text placard to visually merge with the card body's frosted glass aesthetic.
+
+#### Scenario: Viewing a card
+- **WHEN** the user views an image card
+- **THEN** the bottom placard background is transparent
+- **AND** the placard is separated from the card body only by a subtle semi-transparent white top border
+- **AND** the placard text uses the dark fountain pen blue foreground color for contrast against the light theme
