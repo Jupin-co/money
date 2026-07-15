@@ -26,14 +26,14 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
   return (
     <div style={{
       width: '100%', height: '100%',
-      background: 'rgba(255, 255, 255, 0.4)',
+      background: 'rgba(0, 0, 0, 0.03)',
       backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-      border: '1px solid rgba(255, 255, 255, 0.6)',
+      border: '1px solid rgba(0, 0, 0, 0.05)',
       borderRadius: '12px',
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)',
     }}>
       <div style={{ position: 'relative', width: '100%', paddingTop: '100%' }}>
         <motion.img
@@ -51,7 +51,7 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
       <div style={{
         padding: '0.5rem 0.75rem 1rem 0.75rem', 
         background: 'transparent',
-        borderTop: '1px solid rgba(255, 255, 255, 0.5)', position: 'relative'
+        borderTop: '1px solid rgba(0, 0, 0, 0.05)', position: 'relative'
       }}>
         {isStack && (
           <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '0.15rem' }}>
