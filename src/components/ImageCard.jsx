@@ -26,17 +26,14 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
   return (
     <div style={{
       width: '100%', height: '100%',
-      background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.02) 40%, rgba(255,255,255,0) 100%)',
-      backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
-      borderTop: '1px solid rgba(255,255,255,0.3)',
-      borderLeft: '1px solid rgba(255,255,255,0.3)',
-      borderRight: '1px solid rgba(255,255,255,0.05)',
-      borderBottom: '1px solid rgba(255,255,255,0.05)',
+      background: 'rgba(255, 255, 255, 0.4)',
+      backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+      border: '1px solid rgba(255, 255, 255, 0.6)',
       borderRadius: '12px',
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
     }}>
       <div style={{ position: 'relative', width: '100%', paddingTop: '100%' }}>
         <motion.img
@@ -44,7 +41,7 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
           alt={variant.title}
           loading="lazy"
           decoding="async"
-          animate={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.5))', opacity: 1 }}
+          animate={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.2))', opacity: 1 }}
           initial={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           style={{ position: 'absolute', top: '5%', left: '5%', width: '90%', height: '90%', objectFit: 'contain', pointerEvents: 'none' }}
@@ -52,13 +49,13 @@ const CardContent = ({ variant, isStack, totalVariants }) => {
         />
       </div>
       <div style={{
-        padding: '0.5rem 0.75rem 1rem 0.75rem', background: '#FDFBF7',
-        backgroundImage: 'radial-gradient(circle at top left, #FFFFFF 0%, #EAE5D9 100%), url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.05\'/%3E%3C/svg%3E")',
-        borderTop: '1px solid #D5CDBF', color: '#1F1A15', position: 'relative'
+        padding: '0.5rem 0.75rem 1rem 0.75rem', 
+        background: 'transparent',
+        borderTop: '1px solid rgba(255, 255, 255, 0.5)', position: 'relative'
       }}>
         {isStack && (
           <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '0.15rem' }}>
-            <div style={{ fontSize: '0.65rem', background: '#110e0c', color: '#EAE5D9', padding: '0.1rem 0.4rem', borderRadius: '10px', fontFamily: 'var(--font-sans)' }}>
+            <div style={{ fontSize: '0.65rem', background: '#1c3b72', color: '#F4F0E6', padding: '0.1rem 0.4rem', borderRadius: '10px', fontFamily: 'var(--font-sans)' }}>
               {totalVariants} نسخه
             </div>
           </div>
@@ -90,22 +87,15 @@ const ImageCard = ({ item, onClick }) => {
   const variants = isStack ? item.variants : [item];
 
   const [[page, direction], setPage] = useState([0, 0]);
-  const [dragOffset, setDragOffset] = useState(0);
 
   const paginate = (newDirection) => {
     setPage([page + newDirection, newDirection]);
-    setDragOffset(0);
   };
 
   const len = variants.length;
   // Proper array wrapping for negative numbers
   const activeIndex = ((page % len) + len) % len;
   const currentVariant = variants[activeIndex];
-
-  // The bottom card predicts which way the user is dragging!
-  const bottomOffset = dragOffset > 0 ? -1 : 1;
-  const bottomIndex = (((page + bottomOffset) % len) + len) % len;
-  const bottomVariant = variants[bottomIndex];
 
   const renderPagination = () => {
     if (!isStack || len <= 1) return null;
@@ -253,11 +243,9 @@ const ImageCard = ({ item, onClick }) => {
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
                 onClick={() => isTop && onClick(item, activeIndex)}
-                onDrag={(e, info) => setDragOffset(info.offset.x)}
                 onDragEnd={(e, { offset }) => {
                   if (offset.x < -50) paginate(1);
                   else if (offset.x > 50) paginate(-1);
-                  else setDragOffset(0);
                 }}
                 whileDrag={isTop ? { cursor: "grabbing" } : {}}
               >
