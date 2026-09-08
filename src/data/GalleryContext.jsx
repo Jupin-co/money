@@ -25,12 +25,16 @@ export const GalleryProvider = ({ children }) => {
         const data = await response.json();
         
         // Ensure items have a stable 'type' field matching the filter buttons
-        const processedData = (data.items || []).map(item => ({
-          ...item,
-          type: item.type === 'coin' || item.type === 'coins' ? 'coin' : 
-                item.type === 'paper_money' || item.type === 'banknote' ? 'banknote' : 
-                item.type || 'all'
-        }));
+        const processedData = (data.items || []).map(item => {
+          const rawType = (item.type || '').toLowerCase();
+          return {
+            ...item,
+            type: rawType === 'coin' || rawType === 'coins' ? 'coin' : 
+                  rawType === 'paper_money' || rawType === 'banknote' ? 'paper_money' : 
+                  rawType === 'stamp' || rawType === 'stamps' ? 'stamp' :
+                  rawType || 'all'
+          };
+        });
         
         setItems(processedData);
       } catch (error) {
