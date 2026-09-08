@@ -237,62 +237,61 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
                       style={{
-                        background: '#EAE5D9', // Warmer, slightly darker physical paper
-                        backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.08\'/%3E%3C/svg%3E")',
+                        background: 'rgba(255, 255, 255, 0.6)',
+                        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                         padding: '1.5rem',
-                        border: '1px solid #D5CDBF', // Natural cardstock border
-                        borderBottom: '2px solid #C4BCAE', // Give it a little physical thickness
+                        border: '1px solid rgba(255, 255, 255, 0.8)',
                         borderRadius: '12px',
-                        boxShadow: '0 15px 35px rgba(0,0,0,0.2)', // Ground the paper heavily
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
                         position: 'relative'
                       }}
                     >
                       {/* Faux Tape/Pin graphic at top center (now transparent frosty tape) */}
                       <div style={{
                         position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)',
-                        width: '45px', height: '22px', background: 'rgba(255,255,255,0.3)',
+                        width: '45px', height: '22px', background: 'rgba(255,255,255,0.8)',
                         backdropFilter: 'blur(4px)',
-                        border: '1px solid rgba(255,255,255,0.6)', 
+                        border: '1px solid rgba(255,255,255,1)', 
                         borderRadius: '2px',
                         boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
                       }} />
 
-                      <div style={{ color: '#9B8563', fontSize: '0.85rem', marginBottom: '0.5rem', fontFamily: 'var(--font-sans)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      <div style={{ color: '#1c3b72', opacity: 0.7, fontSize: '0.85rem', marginBottom: '0.5rem', fontFamily: 'var(--font-sans)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         {item.country} — {item.year}
                       </div>
                       
-                      <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', fontFamily: 'var(--font-sans)', color: '#1F1A15', fontWeight: 600, borderBottom: '1px solid rgba(31, 26, 21, 0.1)', paddingBottom: '0.5rem' }}>
+                      <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', fontFamily: 'var(--font-sans)', color: '#1c3b72', fontWeight: 600, borderBottom: '1px solid rgba(28, 59, 114, 0.1)', paddingBottom: '0.5rem' }}>
                         {item.title}
                       </h2>
                       
                       <div style={{ margin: '1rem 0', display: 'flex', gap: '2rem' }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span style={{ color: '#9B8563', fontFamily: 'var(--font-sans)', fontSize: '0.8rem' }}>کیفیت</span>
-                          <strong style={{ fontFamily: 'var(--font-sans)', color: '#1F1A15' }}>{item.quality}</strong>
+                          <span style={{ color: '#1c3b72', opacity: 0.7, fontFamily: 'var(--font-sans)', fontSize: '0.8rem' }}>کیفیت</span>
+                          <strong style={{ fontFamily: 'var(--font-sans)', color: '#1c3b72' }}>{item.quality}</strong>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span style={{ color: '#9B8563', fontFamily: 'var(--font-sans)', fontSize: '0.8rem' }}>ارزش</span>
-                          <strong style={{ fontFamily: 'var(--font-sans)', color: '#1F1A15' }}>{item.value}</strong>
+                          <span style={{ color: '#1c3b72', opacity: 0.7, fontFamily: 'var(--font-sans)', fontSize: '0.8rem' }}>ارزش</span>
+                          <strong style={{ fontFamily: 'var(--font-sans)', color: '#1c3b72' }}>{item.value}</strong>
                         </div>
                         {item.serialNumber && (
                           <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ color: '#9B8563', fontFamily: 'var(--font-sans)', fontSize: '0.8rem' }}>شماره سریال</span>
-                            <strong style={{ fontFamily: 'var(--font-sans)', color: '#1F1A15', letterSpacing: '0.1em' }}>{item.serialNumber}</strong>
+                            <span style={{ color: '#1c3b72', opacity: 0.7, fontFamily: 'var(--font-sans)', fontSize: '0.8rem' }}>شماره سریال</span>
+                            <strong style={{ fontFamily: 'var(--font-sans)', color: '#1c3b72', letterSpacing: '0.1em' }}>{item.serialNumber}</strong>
                           </div>
                         )}
                       </div>
 
-                      <p style={{ color: '#4A433A', marginTop: '1rem', lineHeight: 1.6, fontFamily: 'var(--font-sans)', fontSize: '0.9rem' }}>
+                      <p style={{ color: '#1c3b72', opacity: 0.85, marginTop: '1rem', lineHeight: 1.6, fontFamily: 'var(--font-sans)', fontSize: '0.9rem' }}>
                         {item.description}
                       </p>
                       
                       {/* Interactive Buttons moved inside the glass card for cleanliness */}
                       <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-                        <a href="https://t.me/yourusername" target="_blank" rel="noreferrer" style={{
+                        <a href="https://t.me/siavashirani99" target="_blank" rel="noreferrer" style={{
                           flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                          background: '#1F1A15', color: '#FDFBF7', border: 'none',
+                          background: '#1c3b72', color: '#FDFBF7', border: 'none',
                           padding: '0.75rem', fontWeight: 400, fontFamily: 'var(--font-sans)', borderRadius: '6px',
-                          transition: 'all 0.2s', textDecoration: 'none', boxShadow: '0 4px 10px rgba(0,0,0,0.15)'
+                          transition: 'all 0.2s', textDecoration: 'none', boxShadow: '0 4px 10px rgba(28, 59, 114, 0.2)'
                         }}
                         onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                         onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
@@ -300,13 +299,13 @@ const AlbumModal = ({ item: initialItem, initialIndex = 0, onClose }) => {
                           <TelegramLogo size={20} weight="light" />
                           تلگرام
                         </a>
-                        <a href="tel:+1234567890" style={{
+                        <a href="tel:+989350622164" style={{
                           flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                          background: 'rgba(255,255,255,0.5)', color: '#1F1A15', border: '1px solid rgba(31, 26, 21, 0.2)',
+                          background: 'rgba(255,255,255,0.5)', color: '#1c3b72', border: '1px solid rgba(28, 59, 114, 0.2)',
                           padding: '0.75rem', fontWeight: 400, fontFamily: 'var(--font-sans)', borderRadius: '6px',
                           transition: 'all 0.2s', textDecoration: 'none'
                         }}
-                        onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.8)' }}
+                        onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.9)' }}
                         onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.5)' }}
                         >
                           <Phone size={20} weight="light" />
